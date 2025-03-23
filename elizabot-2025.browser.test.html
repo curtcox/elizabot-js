@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElizaBot 2025 Browser Tests</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .pass {
+            color: green;
+            font-weight: bold;
+        }
+        .fail {
+            color: red;
+            font-weight: bold;
+        }
+        .test-summary {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .test-group {
+            margin-bottom: 20px;
+            border-left: 3px solid #ccc;
+            padding-left: 15px;
+        }
+        .test-result {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .test-result.pass {
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+        .test-result.fail {
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+        #loading {
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>ElizaBot 2025 Browser Tests</h1>
+
+    <div id="loading">Loading scripts...</div>
+    <button id="runTests" disabled>Run All Tests</button>
+
+    <div id="results"></div>
+
+    <!-- Load scripts in order with proper error handling -->
+    <script>
+        // Keep track of loaded scripts and dependencies
+        const requiredScripts = [
+            'data/eliza-initials.js',
+            'data/eliza-finals.js',
+            'data/eliza-quits.js',
+            'data/eliza-pres.js',
+            'data/eliza-posts.js',
+            'data/eliza-synons.js',
+            'data/eliza-keywords.js',
+            'data/eliza-post-transforms.js',
+            'elizabot-2025.js'
+        ];
+
+        let loadedScripts = 0;
+
+        // Function to load scripts sequentially
+        function loadScriptsSequentially(scripts, index) {
+            if (index >= scripts.length) {
+                // All scripts loaded
+                document.getElementById('loading').textContent = 'All scripts loaded successfully!';
+                document.getElementById('runTests').disabled = false;
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = scripts[index];
+            script.onload = function() {
+                loadedScripts++;
+                loadScriptsSequentially(scripts, index + 1);
+            };
+            script.onerror = function() {
+                document.getElementById('loading').textContent = `Error loading script: ${scripts[index]}`;
+                console.error(`Failed to load script: ${scripts[index]}`);
+            };
+            document.head.appendChild(script);
+        }
+
+        // Start loading scripts
+        loadScriptsSequentially(requiredScripts, 0);
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultsDiv = document.getElementById('results');
+            const runTestsButton = document.getElementById('runTests');
+
+            let passedTests = 0;
+            let totalTests = 0;
+
+            // Test utility function
+            function test(name, testFunction) {
+                totalTests++;
+                const resultElement = document.createElement('div');
+                resultElement.className = 'test-result';
+
+                try {
+                    testFunction();
+                    resultElement.classList.add('pass');
+                    resultElement.innerHTML = `✅ PASS: ${name}`;
+                    passedTests++;
+                } catch (error) {
+                    resultElement.classList.add('fail');
+                    resultElement.innerHTML = `❌ FAIL: ${name}<br>Error: ${error.message}`;
+                }
+
+                return resultElement;
+            }
+
+            // Assertion utility
+            function assert(condition, message) {
+                if (!condition) {
+                    throw new Error(message || "Assertion failed");
+                }
+            }
+
+            function assertEqual(actual, expected, message) {
+                assert(actual === expected, message || `Expected "${expected}", but got "${actual}"`);
+            }
+
+            function runAllTests() {
+                resultsDiv.innerHTML = '';
+                passedTests = 0;
+                totalTests = 0;
+
+                // Verify that elizabot is loaded
+                if (typeof elizabot === 'undefined') {
+                    resultsDiv.innerHTML = '<div class="test-result fail">❌ ERROR: elizabot object not found. Scripts may not have loaded correctly.</div>';
+                    return;
+                }
+
+                // Create test groups
+                const basicTests = document.createElement('div');
+                basicTests.className = 'test-group';
+                basicTests.innerHTML = '<h2>Basic Functionality Tests</h2>';
+
+                const advancedTests = document.createElement('div');
+                advancedTests.className = 'test-group';
+                advancedTests.innerHTML = '<h2>Advanced Functionality Tests</h2>';
+
+                const edgeCaseTests = document.createElement('div');
+                edgeCaseTests.className = 'test-group';
+                edgeCaseTests.innerHTML = '<h2>Edge Case Tests</h2>';
+
+                // Add basic tests
+                basicTests.appendChild(test("ElizaBot initialization", () => {
+                    assert(typeof elizabot === "object", "elizabot should be an object");
+                    assert(typeof elizabot.start === "function", "elizabot should have a start method");
+                    assert(typeof elizabot.reply === "function", "elizabot should have a reply method");
+                    assert(typeof elizabot.bye === "function", "elizabot should have a bye method");
+                    assert(typeof elizabot.setSeed === "function", "elizabot should have a setSeed method");
+                }));
+
+                basicTests.appendChild(test("Bot provides expected response format", () => {
+                    elizabot.setSeed(1234);
+
+                    const initial = elizabot.start();
+                    assert(typeof initial === "string" && initial.length > 0, "Initial greeting should be a non-empty string");
+
+                    const reply = elizabot.reply("Hello");
+                    assert(typeof reply === "string" && reply.length > 0, "Reply should be a non-empty string");
+
+                    const final = elizabot.bye();
+                    assert(typeof final === "string" && final.length > 0, "Final response should be a non-empty string");
+                }));
+
+                basicTests.appendChild(test("Setting seed produces deterministic results", () => {
+                    // First run with seed 1
+                    elizabot.setSeed(1);
+                    const firstStart = elizabot.start();
+                    const firstReply = elizabot.reply("Hello");
+
+                    // Second run with seed 1 (should match)
+                    elizabot.setSeed(1);
+                    const secondStart = elizabot.start();
+                    const secondReply = elizabot.reply("Hello");
+
+                    assertEqual(firstStart, secondStart, "Initial messages should match with same seed");
+                    assertEqual(firstReply, secondReply, "Replies should match with same seed");
+                }));
+
+                // Add advanced tests
+                advancedTests.appendChild(test("Bot correctly matches keywords", () => {
+                    elizabot.setSeed(1234);
+
+                    const computerReply = elizabot.reply("I think computers are interesting");
+                    assert(computerReply.length > 0, "Bot should respond to 'computer' keyword");
+
+                    const dreamReply = elizabot.reply("I had a dream last night");
+                    assert(dreamReply.length > 0, "Bot should respond to 'dream' keyword");
+                }));
+
+                advancedTests.appendChild(test("Responses are properly capitalized", () => {
+                    elizabot.setSeed(1234);
+                    const reply = elizabot.reply("hello");
+                    assert(reply[0] === reply[0].toUpperCase(), "First letter of reply should be capitalized");
+                }));
+
+                advancedTests.appendChild(test("Bot handles multiple conversation turns", () => {
+                    elizabot.setSeed(1234);
+
+                    const greeting = elizabot.start();
+                    assert(greeting.length > 0, "Bot should provide an initial greeting");
+
+                    const replies = [
+                        elizabot.reply("Hello"),
+                        elizabot.reply("I feel sad"),
+                        elizabot.reply("My mother doesn't understand me"),
+                        elizabot.reply("I've been having strange dreams")
+                    ];
+
+                    replies.forEach((reply, i) => {
+                        assert(reply.length > 0, `Turn ${i+1} should produce a valid response`);
+                    });
+                }));
+
+                // Add edge case tests
+                edgeCaseTests.appendChild(test("Bot handles empty input", () => {
+                    elizabot.setSeed(1234);
+                    const emptyReply = elizabot.reply("");
+                    assert(emptyReply.length > 0, "Bot should handle empty input");
+                }));
+
+                edgeCaseTests.appendChild(test("Bot handles very long input", () => {
+                    elizabot.setSeed(1234);
+                    const longInput = "This is a very long input ".repeat(20);
+                    const longReply = elizabot.reply(longInput);
+                    assert(longReply.length > 0, "Bot should handle very long input");
+                }));
+
+                edgeCaseTests.appendChild(test("Bot handles special characters", () => {
+                    elizabot.setSeed(1234);
+                    const specialCharsReply = elizabot.reply("What about @#$%^&*() symbols?");
+                    assert(specialCharsReply.length > 0, "Bot should handle input with special characters");
+                }));
+
+                // Append all test groups
+                resultsDiv.appendChild(basicTests);
+                resultsDiv.appendChild(advancedTests);
+                resultsDiv.appendChild(edgeCaseTests);
+
+                // Add test summary
+                const summary = document.createElement('div');
+                summary.className = 'test-summary';
+                if (passedTests === totalTests) {
+                    summary.innerHTML = `<span class="pass">✅ All tests passed!</span> (${passedTests}/${totalTests})`;
+                } else {
+                    summary.innerHTML = `<span class="fail">❌ Some tests failed.</span> (${passedTests}/${totalTests} passed)`;
+                }
+                resultsDiv.appendChild(summary);
+            }
+
+            // Attach event listener
+            runTestsButton.addEventListener('click', runAllTests);
+        });
+    </script>
+</body>
+</html>
