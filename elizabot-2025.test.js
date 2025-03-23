@@ -3,8 +3,7 @@
  */
 
 // Load required modules
-const fs = require('fs');
-const path = require('path');
+const { ElizaBot } = require('./elizabot-2025.js');
 
 // Setup performance timing for Node.js
 const getTime = () => {
@@ -24,371 +23,7 @@ const DEBUG = true;
 let totalTests = 0;
 let passedTests = 0;
 
-// Load all the data files first and make them available
-const elizaInitialsData = require('./data/eliza-initials.js');
-const elizaFinalsData = require('./data/eliza-finals.js');
-const elizaQuitsData = require('./data/eliza-quits.js');
-const elizaPresData = require('./data/eliza-pres.js');
-const elizaPostsData = require('./data/eliza-posts.js');
-const elizaSynonsData = require('./data/eliza-synons.js');
-const elizaKeywordsData = require('./data/eliza-keywords.js');
-const elizaPostTransformsData = require('./data/eliza-post-transforms.js');
-
-// Define the ElizaBot class for testing
-class ElizaBot {
-    constructor(randomFunc) {
-        if (!randomFunc || typeof randomFunc !== 'function') {
-            throw new Error("Random function is required");
-        }
-
-        this.elizaInitials = elizaInitialsData;
-        this.elizaFinals = elizaFinalsData;
-        this.elizaQuits = elizaQuitsData;
-
-        this.elizaPres = elizaPresData;
-        this.elizaPosts = elizaPostsData;
-        this.elizaSynons = elizaSynonsData;
-        this.elizaKeywords = elizaKeywordsData;
-        this.elizaPostTransforms = elizaPostTransformsData;
-
-        this.randomFunc = randomFunc;
-        this.capitalizeFirstLetter = true;
-        this.debug = false;
-        this.memSize = 20;
-        this.version = "1.1 (browser)";
-
-        this._dataParsed = false;
-        if (!this._dataParsed) {
-            this._init();
-            this._dataParsed = true;
-        }
-        this.reset();
-    }
-
-    reset() {
-        this.quit = false;
-        this.mem = [];
-        this.lastchoice = [];
-
-        for (let k = 0; k < this.elizaKeywords.length; k++) {
-            this.lastchoice[k] = [];
-            const rules = this.elizaKeywords[k][2];
-            for (let i = 0; i < rules.length; i++) this.lastchoice[k][i] = -1;
-        }
-    }
-
-    _init() {
-        // install ref to global object
-        const global = this;
-        // parse data and convert it from canonical form to internal use
-        // produce synonym list
-        const synPatterns = {};
-
-        if ((this.elizaSynons) && (typeof this.elizaSynons == 'object')) {
-            for (const i in this.elizaSynons) synPatterns[i] = '(' + i + '|' + this.elizaSynons[i].join('|') + ')';
-        }
-        // check for keywords or install empty structure to prevent any errors
-        if ((!this.elizaKeywords) || (typeof this.elizaKeywords.length == 'undefined')) {
-            this.elizaKeywords = [['###', 0, [['###', []]]]];
-        }
-        // 1st convert rules to regexps
-        // expand synonyms and insert asterisk expressions for backtracking
-        const sre = /@(\S+)/;
-        const are = /(\S)\s*\*\s*(\S)/;
-        const are1 = /^\s*\*\s*(\S)/;
-        const are2 = /(\S)\s*\*\s*$/;
-        const are3 = /^\s*\*\s*$/;
-        const wsre = /\s+/g;
-        for (let k = 0; k < this.elizaKeywords.length; k++) {
-            const rules = this.elizaKeywords[k][2];
-            this.elizaKeywords[k][3] = k; // save original index for sorting
-            for (let i = 0; i < rules.length; i++) {
-                const r = rules[i];
-                // check mem flag and store it as decomp's element 2
-                if (r[0].charAt(0) == '$') {
-                    let ofs = 1;
-                    while (r[0].charAt(ofs) == ' ') ofs++;
-                    r[0] = r[0].substring(ofs);
-                    r[2] = true;
-                }
-                else {
-                    r[2] = false;
-                }
-                // expand synonyms (v.1.1: work around lambda function)
-                let m = sre.exec(r[0]);
-                while (m) {
-                    const sp = (synPatterns[m[1]]) ? synPatterns[m[1]] : m[1];
-                    r[0] = r[0].substring(0, m.index) + sp + r[0].substring(m.index + m[0].length);
-                    m = sre.exec(r[0]);
-                }
-                // expand asterisk expressions (v.1.1: work around lambda function)
-                if (are3.test(r[0])) {
-                    r[0] = '\\s*(.*)\\s*';
-                }
-                else {
-                    m = are.exec(r[0]);
-                    if (m) {
-                        let lp = '';
-                        let rp = r[0];
-                        while (m) {
-                            lp += rp.substring(0, m.index + 1);
-                            if (m[1] != ')') lp += '\\b';
-                            lp += '\\s*(.*)\\s*';
-                            if ((m[2] != '(') && (m[2] != '\\')) lp += '\\b';
-                            lp += m[2];
-                            rp = rp.substring(m.index + m[0].length);
-                            m = are.exec(rp);
-                        }
-                        r[0] = lp + rp;
-                    }
-                    m = are1.exec(r[0]);
-                    if (m) {
-                        let lp = '\\s*(.*)\\s*';
-                        if ((m[1] != ')') && (m[1] != '\\')) lp += '\\b';
-                        r[0] = lp + r[0].substring(m.index - 1 + m[0].length);
-                    }
-                    m = are2.exec(r[0]);
-                    if (m) {
-                        let lp = r[0].substring(0, m.index + 1);
-                        if (m[1] != '(') lp += '\\b';
-                        r[0] = lp + '\\s*(.*)\\s*';
-                    }
-                }
-                // expand white space
-                r[0] = r[0].replace(wsre, '\\s+');
-                wsre.lastIndex = 0;
-            }
-        }
-        // now sort keywords by rank (highest first)
-        this.elizaKeywords.sort(this._sortKeywords);
-        // and compose regexps and refs for pres and posts
-        ElizaBot.prototype.pres = {};
-        ElizaBot.prototype.posts = {};
-
-        if ((this.elizaPres) && (this.elizaPres.length)) {
-            const a = [];
-            for (let i = 0; i < this.elizaPres.length; i += 2) {
-                a.push(this.elizaPres[i]);
-                ElizaBot.prototype.pres[this.elizaPres[i]] = this.elizaPres[i + 1];
-            }
-            ElizaBot.prototype.preExp = new RegExp('\\b(' + a.join('|') + ')\\b');
-        }
-        else {
-            // default (should not match)
-            ElizaBot.prototype.preExp = /####/;
-            ElizaBot.prototype.pres['####'] = '####';
-        }
-
-        if ((this.elizaPosts) && (this.elizaPosts.length)) {
-            const a = [];
-            for (let i = 0; i < this.elizaPosts.length; i += 2) {
-                a.push(this.elizaPosts[i]);
-                ElizaBot.prototype.posts[this.elizaPosts[i]] = this.elizaPosts[i + 1];
-            }
-            ElizaBot.prototype.postExp = new RegExp('\\b(' + a.join('|') + ')\\b');
-        }
-        else {
-            // default (should not match)
-            ElizaBot.prototype.postExp = /####/;
-            ElizaBot.prototype.posts['####'] = '####';
-        }
-        // check for elizaQuits and install default if missing
-        if ((!this.elizaQuits) || (typeof this.elizaQuits.length == 'undefined')) {
-            this.elizaQuits = [];
-        }
-        // done
-        ElizaBot.prototype._dataParsed = true;
-    }
-
-    _sortKeywords(a, b) {
-        // sort by rank
-        if (a[1] > b[1]) return -1;
-        else if (a[1] < b[1]) return 1;
-        // or original index
-        else if (a[3] > b[3]) return 1;
-        else if (a[3] < b[3]) return -1;
-        else return 0;
-    }
-
-    transform(text) {
-        let rpl = '';
-        this.quit = false;
-        // unify text string
-        text = text.toLowerCase();
-        text = text.replace(/@#\$%\^&\*\(\)_\+=~`\{\[\}\]\|:;<>\/\\\t/g, ' ');
-        text = text.replace(/\s+-+\s+/g, '.');
-        text = text.replace(/\s*[,\.\?!;]+\s*/g, '.');
-        text = text.replace(/\s*\bbut\b\s*/g, '.');
-        text = text.replace(/\s{2,}/g, ' ');
-        // split text in part sentences and loop through them
-        const parts = text.split('.');
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            if (part != '') {
-                // check for quit expression
-                for (let q = 0; q < this.elizaQuits.length; q++) {
-                    if (this.elizaQuits[q] == part) {
-                        this.quit = true;
-                        return this.getFinal();
-                    }
-                }
-                // preprocess (v.1.1: work around lambda function)
-                let m = this.preExp.exec(part);
-                if (m) {
-                    let lp = '';
-                    let rp = part;
-                    while (m) {
-                        lp += rp.substring(0, m.index) + this.pres[m[1]];
-                        rp = rp.substring(m.index + m[0].length);
-                        m = this.preExp.exec(rp);
-                    }
-                    part = lp + rp;
-                }
-                this.sentence = part;
-                // loop through keywords
-                for (let k = 0; k < this.elizaKeywords.length; k++) {
-                    if (part.search(new RegExp('\\b' + this.elizaKeywords[k][0] + '\\b', 'i')) >= 0) {
-                        rpl = this._execRule(k);
-                    }
-                    if (rpl != '') return this._postTransform(rpl);
-                }
-            }
-        }
-        // nothing matched try mem
-        rpl = this._memGet();
-        // if nothing in mem, so try xnone
-        if (rpl == '') {
-            this.sentence = ' '; // this is a trick to make _execRule work
-            const k = this._getRuleIndexByKey('xnone');
-            if (k >= 0) rpl = this._execRule(k);
-        }
-        // return reply or default string
-        return (rpl != '') ? this._postTransform(rpl) : 'I am at a loss for words.';
-    }
-
-    _execRule(k) {
-        const rule = this.elizaKeywords[k];
-        const decomps = rule[2];
-        const paramre = /\(([0-9]+)\)/;
-        for (let i = 0; i < decomps.length; i++) {
-            const m = this.sentence.match(decomps[i][0]);
-            if (m != null) {
-                const reasmbs = decomps[i][1];
-                const memflag = decomps[i][2];
-                let ri = Math.floor(this.randomFunc() * reasmbs.length);
-                if (this.lastchoice[k][i] == ri) {
-                    ri = ++this.lastchoice[k][i];
-                    if (ri >= reasmbs.length) {
-                        ri = 0;
-                        this.lastchoice[k][i] = -1;
-                    }
-                } else {
-                    this.lastchoice[k][i] = ri;
-                }
-                let rpl = reasmbs[ri];
-
-                // Check for goto
-                if (rpl.search(/^goto /i) === 0) {
-                    const ki = this._getRuleIndexByKey(rpl.substring(5));
-                    if (ki >= 0) return this._execRule(ki);
-                }
-
-                // Substitute positional params
-                let m1 = paramre.exec(rpl);
-                if (m1) {
-                    let lp = '';
-                    let rp = rpl;
-                    while (m1) {
-                        let param = m[parseInt(m1[1])];
-
-                        // Postprocess param - this is the critical part for post substitutions
-                        if (this.postExp && this.posts) {
-                            let m2 = this.postExp.exec(param);
-                            if (m2) {
-                                let lp2 = '';
-                                let rp2 = param;
-                                while (m2) {
-                                    lp2 += rp2.substring(0, m2.index) + this.posts[m2[1]];
-                                    rp2 = rp2.substring(m2.index + m2[0].length);
-                                    m2 = this.postExp.exec(rp2);
-                                }
-                                param = lp2 + rp2;
-                            }
-                        }
-
-                        lp += rp.substring(0, m1.index) + param;
-                        rp = rp.substring(m1.index + m1[0].length);
-                        m1 = paramre.exec(rp);
-                    }
-                    rpl = lp + rp;
-                }
-
-                rpl = this._postTransform(rpl);
-                if (memflag) this._memSave(rpl);
-                else return rpl;
-            }
-        }
-        return '';
-    }
-
-    _postTransform(s) {
-        // final cleanings
-        s = s.replace(/\s{2,}/g, ' ');
-        s = s.replace(/\s+\./g, '.');
-
-        // Apply post regex transforms from elizaPostTransforms data
-        if (this.elizaPostTransforms && this.elizaPostTransforms.length) {
-            for (let i = 0; i < this.elizaPostTransforms.length; i += 2) {
-                s = s.replace(new RegExp(this.elizaPostTransforms[i], 'g'), this.elizaPostTransforms[i + 1]);
-                // Reset lastIndex to prevent regex state issues
-                if (this.elizaPostTransforms[i].lastIndex) {
-                    this.elizaPostTransforms[i].lastIndex = 0;
-                }
-            }
-        }
-
-        // capitalize first char
-        if (this.capitalizeFirstLetter) {
-            const re = /^([a-z])/;
-            const m = re.exec(s);
-            if (m) s = m[0].toUpperCase() + s.substring(1);
-        }
-        return s;
-    }
-
-    _getRuleIndexByKey(key) {
-        for (let k = 0; k < this.elizaKeywords.length; k++) {
-            if (this.elizaKeywords[k][0] == key) return k;
-        }
-        return -1;
-    }
-
-    _memSave(t) {
-        this.mem.push(t);
-        if (this.mem.length > this.memSize) this.mem.shift();
-    }
-
-    _memGet() {
-        if (this.mem.length) {
-            if (this.noRandom) return this.mem[0];
-            else {
-                const n = Math.floor(this.randomFunc() * this.mem.length);
-                if (n >= 0 && n < this.mem.length) return this.mem[n];
-            }
-        }
-        return '';
-    }
-
-    getFinal() {
-        if (!this.elizaFinals) return '';
-        return this.elizaFinals[Math.floor(this.randomFunc() * this.elizaFinals.length)];
-    }
-
-    getInitial() {
-        if (!this.elizaInitials) return '';
-        return this.elizaInitials[Math.floor(this.randomFunc() * this.elizaInitials.length)];
-    }
-}
+// Remove the ElizaBot class definition as we're importing it now
 
 // Create a simple singleton interface to the ElizaBot
 const elizabot = (() => {
@@ -1282,13 +917,15 @@ test("Post-substitution regex construction", () => {
 
 // Test the specific failing case with debugging
 test("Debug for parameter substitution with post-substitution in transform", () => {
+    console.log("Starting test 1");
     const bot = new ElizaBot(() => 0);
+    console.log("Starting test 2");
 
     // Mock the transform method environment
     bot.elizaPosts = ["am", "are"];
     bot.posts = {"am": "are"};
     bot.postExp = new RegExp('\\b(' + "am" + ')\\b');
-
+    console.log("Starting test 3");
     // Log the debugging information
     console.log("elizaPosts:", JSON.stringify(bot.elizaPosts));
     console.log("posts:", JSON.stringify(bot.posts));
@@ -2506,7 +2143,7 @@ test("DEBUG: Test for regex lastIndex issues in _postTransform", () => {
                 "Should normalize all multiple spaces");
         }
 
-        // Update the result for the next iteration
+
         result2 = newResult;
 
         // Reset the regex for the next iteration
@@ -2976,7 +2613,7 @@ test("DEBUG: Critical - Track regex states in nested loops", () => {
             console.log(`DEBUG - Applied substitution: "${matchedText}" → "${replacement}"`);
             console.log(`DEBUG - Current processed param: "${processedParam}"`);
 
-            // Update the remaining parameter text
+
             remainingParam = remainingParam.substring(postMatch.index + postMatch[0].length);
             console.log(`DEBUG - Remaining param text: "${remainingParam}"`);
 
@@ -2995,7 +2632,7 @@ test("DEBUG: Critical - Track regex states in nested loops", () => {
         finalResult += processedParam;
         console.log(`DEBUG - Result after adding param: "${finalResult}"`);
 
-        // Update the remaining template text
+
         // Use paramMatch values captured before any inner loops
         remainingTemplate = remainingTemplate.substring(paramMatch.index + paramMatch[0].length);
         console.log(`DEBUG - Remaining template: "${remainingTemplate}"`);
@@ -3029,11 +2666,11 @@ test("DEBUG: Critical - Test infinite loop detection", () => {
         let finalResult = '';
         let remainingTemplate = template;
 
-        // FIXED: Create a fresh paramRegex each time to avoid lastIndex issues
+
         let paramMatch = (new RegExp(paramRegex)).exec(remainingTemplate);
 
         let outerIterations = 0;
-        const MAX_ITERATIONS = 10; // FIXED: Reduced limit to prevent memory issues
+        const MAX_ITERATIONS = 10;
 
         console.log(`DEBUG - Template: "${template}"`);
         console.log(`DEBUG - Match array: ${JSON.stringify(match)}`);
@@ -3053,11 +2690,11 @@ test("DEBUG: Critical - Test infinite loop detection", () => {
                 let processedParam = '';
                 let remainingParam = paramValue;
 
-                // FIXED: Create a fresh postRegex object for each match to avoid lastIndex issues
+
                 let postMatch = (new RegExp(postRegex)).exec(remainingParam);
 
                 let innerIterations = 0;
-                const MAX_INNER_ITERATIONS = 5; // FIXED: Strict limit for inner loop
+                const MAX_INNER_ITERATIONS = 5;
 
                 while (postMatch && innerIterations < MAX_INNER_ITERATIONS) {
                     innerIterations++;
@@ -3067,13 +2704,13 @@ test("DEBUG: Critical - Test infinite loop detection", () => {
                                       postSubs[postMatch[1]];
                     remainingParam = remainingParam.substring(postMatch.index + postMatch[0].length);
 
-                    // FIXED: Create a fresh postRegex object for each exec call
+
                     postMatch = (new RegExp(postRegex)).exec(remainingParam);
                 }
 
                 if (innerIterations >= MAX_INNER_ITERATIONS) {
                     console.log("DEBUG - WARNING: Reaching iteration limit in inner loop - terminating early");
-                    // FIXED: Just add the remaining text without further processing
+
                     processedParam += remainingParam;
                 }
 
@@ -3082,23 +2719,23 @@ test("DEBUG: Critical - Test infinite loop detection", () => {
 
             finalResult += paramValue;
 
-            // Update remaining template based on original match
+
             remainingTemplate = remainingTemplate.substring(paramMatch.index + paramMatch[0].length);
 
-            // FIXED: Create a fresh paramRegex for each exec call
+
             paramMatch = (new RegExp(paramRegex)).exec(remainingTemplate);
         }
 
         if (outerIterations >= MAX_ITERATIONS) {
             console.log("DEBUG - WARNING: Reaching iteration limit in outer loop - terminating early");
-            // FIXED: Add remaining template and return what we have so far
+
             finalResult += remainingTemplate;
         } else {
             // Add any remaining template text
             finalResult += remainingTemplate;
         }
 
-        // FIXED: Always return the final result
+
         return finalResult;
     }
 
@@ -3985,12 +3622,6 @@ test("Memory usage with complex input", () => {
 });
 // ... existing code ...
 
-// Replace the failing test with several smaller, more focused tests
-test("Debug for parameter substitution with post-substitution in transform", () => {
-    // This test is replaced by smaller, more focused tests below
-    console.log("Skipping original test that caused memory issues");
-});
-
 test("Post-substitution - simple case with direct parameter substitution", () => {
     const bot = new ElizaBot(() => 0);
 
@@ -4197,12 +3828,12 @@ test("Fixing infinite loop in testForInfiniteLoop", () => {
         let outerIterations = 0;
         const MAX_ITERATIONS = 10; // Limit iterations to prevent infinite loops
 
-        console.log(`FIXED - Template: "${template}"`);
+        console.log(`DEBUG - Template: "${template}"`);
 
         // Important: While loop with finite iterations limit
         while (paramMatch && outerIterations < MAX_ITERATIONS) {
             outerIterations++;
-            console.log(`FIXED - Outer iteration ${outerIterations}: param match at ${paramMatch.index}`);
+            console.log(`DEBUG - Outer iteration ${outerIterations}: param match at ${paramMatch.index}`);
 
             // Add text before the parameter
             const prefix = remainingTemplate.substring(0, paramMatch.index);
@@ -4211,7 +3842,7 @@ test("Fixing infinite loop in testForInfiniteLoop", () => {
             // Get parameter value
             const paramNum = parseInt(paramMatch[1]);
             let paramValue = match[paramNum];
-            console.log(`FIXED - Parameter value: "${paramValue}"`);
+            console.log(`DEBUG - Parameter value: "${paramValue}"`);
 
             // Process parameter with post-substitution
             let processedParam = paramValue;
@@ -4228,7 +3859,7 @@ test("Fixing infinite loop in testForInfiniteLoop", () => {
                     const substitution = postSubs[postMatch[1]];
                     const after = processedParam.substring(postMatch.index + postMatch[0].length);
                     processedParam = before + substitution + after;
-                    console.log(`FIXED - After substitution: "${processedParam}"`);
+                    console.log(`DEBUG - After substitution: "${processedParam}"`);
                 }
             }
 
@@ -4392,7 +4023,7 @@ test("Controlled post-substitution with iteration limit", () => {
         // Add text before match and the replacement
         processedParam += remainingText.substring(0, m2.index) + bot.posts[m2[1]];
 
-        // Update remaining text
+
         remainingText = remainingText.substring(m2.index + m2[0].length);
 
         // Create fresh regex to avoid lastIndex issues
@@ -4447,7 +4078,7 @@ test("Debug large substitution test with logging", () => {
         // Add text before the match and the substitution
         processedText += remainingText.substring(0, match.index) + bot.posts[match[1]];
 
-        // Update remaining text
+
         remainingText = remainingText.substring(match.index + match[0].length);
 
         // Create fresh regex instance to avoid lastIndex issues
@@ -4486,7 +4117,7 @@ test("Simplified recursive post-substitution test", () => {
             // Add text before match + substitution
             result += remaining.substring(0, match.index) + subs[match[1]];
 
-            // Update remaining text
+
             remaining = remaining.substring(match.index + match[0].length);
 
             // Create a fresh regex object to avoid lastIndex issues
