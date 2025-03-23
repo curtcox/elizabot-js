@@ -1,7 +1,14 @@
+// Simple seeded random number generator
+var seed = 1234; // Fixed seed for reproducible results
+function seededRandom() {
+	seed = (seed * 9301 + 49297) % 233280;
+	return seed / 233280;
+}
+
 exports.reply = function (r) {
 	if (this.bot == null) {
 		this.bot = new ElizaBot(false);
-	} 
+	}
 	return this.bot.transform(r);
 }
 
@@ -18,6 +25,14 @@ exports.bye = function () {
 	}
 	return this.bot.getFinal();
 }
+
+// Set or reset the random seed
+exports.setSeed = function(newSeed) {
+	seed = newSeed || 1234;
+	if (this.bot) {
+		this.bot.reset();
+	}
+};
 
 function ElizaBot(noRandomFlag) {
 
@@ -219,7 +234,7 @@ function ElizaBot(noRandomFlag) {
 		     "What do you think about machines ?",
 		     "You don't think I am a computer program, do you ?"
 		  ]]
-		]],	
+		]],
 		["am", 0, [
 		 ["* am i *", [
 		     "Do you believe you are (2) ?",
@@ -874,7 +889,7 @@ ElizaBot.prototype._execRule = function(k) {
 		if (m!=null) {
 			var reasmbs=decomps[i][1];
 			var memflag=decomps[i][2];
-			var ri= (this.noRandom)? 0 : Math.floor(Math.random()*reasmbs.length);
+			var ri= (this.noRandom)? 0 : Math.floor(seededRandom()*reasmbs.length);
 			if (((this.noRandom) && (this.lastchoice[k][i]>ri)) || (this.lastchoice[k][i]==ri)) {
 				ri= ++this.lastchoice[k][i];
 				if (ri>=reasmbs.length) {
@@ -963,7 +978,7 @@ ElizaBot.prototype._memGet = function() {
 	if (this.mem.length) {
 		if (this.noRandom) return this.mem.shift();
 		else {
-			var n=Math.floor(Math.random()*this.mem.length);
+			var n=Math.floor(seededRandom()*this.mem.length);
 			var rpl=this.mem[n];
 			for (var i=n+1; i<this.mem.length; i++) this.mem[i-1]=this.mem[i];
 			this.mem.length--;
@@ -974,14 +989,13 @@ ElizaBot.prototype._memGet = function() {
 }
 
 ElizaBot.prototype.getFinal = function() {
-
 	if (!this.elizaFinals) return '';
-	return this.elizaFinals[Math.floor(Math.random()*this.elizaFinals.length)];
+	return this.elizaFinals[Math.floor(seededRandom()*this.elizaFinals.length)];
 }
 
 ElizaBot.prototype.getInitial = function() {
 	if (!this.elizaInitials) return '';
-	return this.elizaInitials[Math.floor(Math.random()*this.elizaInitials.length)];
+	return this.elizaInitials[Math.floor(seededRandom()*this.elizaInitials.length)];
 }
 
 var elizaFinals = [
