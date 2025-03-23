@@ -1,6 +1,8 @@
 elizabot-js
 ===========
 
+[![Deploy to GitHub Pages](https://github.com/curtcox/elizabot-js/actions/workflows/deploy-to-pages.yml/badge.svg)](https://github.com/curtcox/elizabot-js/actions/workflows/deploy-to-pages.yml)
+
 Eliza JS bot based on www.masswerk.at/elizabot and http://en.wikipedia.org/wiki/ELIZA
 
 Try it online: [ElizaBot Demo](https://curtcox.github.io/elizabot-js/)
