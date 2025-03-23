@@ -165,3 +165,45 @@ The test generates conversations with different seeds to demonstrate that:
 3. The variation is solely due to the random seed, not any non-deterministic behavior
 
 This shows that elizabot.js is completely deterministic when controlling for randomness.
+
+# ElizaBot Browser Compatibility Tests
+
+This repository contains tests to verify that `elizabot-browser.js` (browser version) responds exactly like `elizabot.js` (Node.js version).
+
+## Test Files
+
+- **test-browser-compatibility.js**: Directly compares the outputs of both implementations with the same inputs and random seeds
+- **test-determinism.js**: Verifies both implementations match the expected reference responses
+
+## How to Run Tests
+
+```bash
+# Run direct comparison test
+node test-browser-compatibility.js
+
+# Run determinism test against reference data
+node test-determinism.js
+```
+
+## Test Inputs
+
+The tests use several input files to verify different conversation scenarios:
+
+- **eliza-inputs.txt**: Standard conversation
+- **eliza-inputs-short.txt**: Short conversation
+- **eliza-inputs-family.txt**: Family-related conversation
+- **eliza-inputs-long.txt**: Extended conversation with more topics
+
+## Implementation Details
+
+- **browser-wrapper.js**: Adapts the browser version to run in Node.js for testing
+- **eliza-new-reference.json**: Contains reference responses for different seeds and inputs
+
+## Technical Approach
+
+1. Each test initializes both implementations with the same random seed
+2. The same inputs are fed to both implementations
+3. Responses are compared to ensure they're identical
+4. With the determinism test, responses are also compared against a pre-generated reference
+
+This confirms that `elizabot-browser.js` maintains full compatibility with the original `elizabot.js` implementation.

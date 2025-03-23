@@ -130,11 +130,7 @@
         // Create a separate scope for each bot to avoid interference
         const originalElizaScope = {}, browserElizaScope = {};
 
-        // Create random functions for each bot
-        function createRandomFunction() {
-            return Math.random;
-        }
-
+        // Create a seeded random function for consistent results
         function createSeededRandomFunction() {
             let seed = 1234;
             return function() {
@@ -143,14 +139,14 @@
             };
         }
 
+        // We'll use the same seeded random function for both bots
+        const sharedRandomFunction = createSeededRandomFunction();
+
         // Load original Eliza implementation (Node.js version)
         (function() {
-            // Temporarily replace the global exports object
-            const originalExports = typeof exports !== 'undefined' ? exports : {};
-
-            // Create a temporary exports object
-            if (typeof exports === 'undefined') {
-                exports = {};
+            // Create a global exports object if it doesn't exist
+            if (typeof window.exports === 'undefined') {
+                window.exports = {};
             }
 
             // Load the script
@@ -160,27 +156,24 @@
                 // Save the loaded methods to our scope
                 originalElizaScope.start = function() {
                     if (!originalElizaScope.bot) {
-                        originalElizaScope.bot = new exports.ElizaBot(createRandomFunction());
+                        originalElizaScope.bot = new window.exports.ElizaBot(sharedRandomFunction);
                     }
                     return originalElizaScope.bot.getInitial();
                 };
 
                 originalElizaScope.reply = function(r) {
                     if (!originalElizaScope.bot) {
-                        originalElizaScope.bot = new exports.ElizaBot(createRandomFunction());
+                        originalElizaScope.bot = new window.exports.ElizaBot(sharedRandomFunction);
                     }
                     return originalElizaScope.bot.transform(r);
                 };
 
                 originalElizaScope.bye = function() {
                     if (!originalElizaScope.bot) {
-                        originalElizaScope.bot = new exports.ElizaBot(createRandomFunction());
+                        originalElizaScope.bot = new window.exports.ElizaBot(sharedRandomFunction);
                     }
                     return originalElizaScope.bot.getFinal();
                 };
-
-                // Reset the exports object
-                exports = originalExports;
 
                 // Initialize the original bot chat
                 initializeOriginalChat();
@@ -195,9 +188,22 @@
             browserScript.onload = function() {
                 // Save to our scope
                 if (typeof elizabot !== 'undefined') {
-                    browserElizaScope.start = elizabot.start;
-                    browserElizaScope.reply = elizabot.reply;
-                    browserElizaScope.bye = elizabot.bye;
+                    // Store the original methods
+                    const originalStart = elizabot.start;
+                    const originalReply = elizabot.reply;
+                    const originalBye = elizabot.bye;
+
+                    // Override with our methods that will use the seeded random function
+                    window._elizaRandomFunction = sharedRandomFunction;
+
+                    // Monkey patch the elizabot to use our shared random function
+                    if (typeof elizabot._elizabot !== 'undefined') {
+                        elizabot._elizabot.random = sharedRandomFunction;
+                    }
+
+                    browserElizaScope.start = originalStart;
+                    browserElizaScope.reply = originalReply;
+                    browserElizaScope.bye = originalBye;
 
                     // Initialize the browser bot chat
                     initializeBrowserChat();
@@ -253,6 +259,32 @@
                     sendMessage(userInput, chatContainer, browserElizaScope);
                 }
             });
+        }
+
+        // Function to send message to both bots simultaneously
+        function sendToAllBots(message) {
+            const originalChat = document.getElementById('original-chat-container');
+            const browserChat = document.getElementById('browser-chat-container');
+
+            // Add user message to both chats
+            addUserMessage(originalChat, message);
+            addUserMessage(browserChat, message);
+
+            // Get responses with a short delay
+            setTimeout(() => {
+                const originalResponse = originalElizaScope.reply(message);
+                const browserResponse = browserElizaScope.reply(message);
+
+                addBotMessage(originalChat, originalResponse);
+                addBotMessage(browserChat, browserResponse);
+
+                // Log if responses are different (for debugging)
+                if (originalResponse !== browserResponse) {
+                    console.log('Different responses detected:');
+                    console.log('Original:', originalResponse);
+                    console.log('Browser:', browserResponse);
+                }
+            }, 300);
         }
 
         // Function to send message to a bot
