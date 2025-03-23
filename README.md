@@ -6,28 +6,38 @@ This project contains implementations of the classic ELIZA chatbot in JavaScript
 
 ELIZA is an early natural language processing computer program created from 1964 to 1966 at the MIT Artificial Intelligence Laboratory by Joseph Weizenbaum. It was designed to simulate a Rogerian psychotherapist by using pattern matching and substitution methodology.
 
+[![Deploy static content to Pages](https://github.com/curtcox/elizabot-js/actions/workflows/static.yml/badge.svg)](https://github.com/curtcox/elizabot-js/actions/workflows/static.yml)
+
 This repository contains two implementations:
 
 1. **elizabot.js** - The original Node.js version.
 2. **elizabot-browser.js** - A browser-compatible version that produces identical output.
 
+## Live Demo
+
+You can try the ElizaBot directly in your browser by visiting the GitHub Pages deployment:
+[https://curtcox.github.io/elizabot-js/](https://curtcox.github.io/elizabot-js/)
+
 ## Deterministic Behavior
 
-A key feature of this implementation is that both versions produce identical, deterministic outputs when given:
-- The same random seed (set via the `setSeed()` method)
+A key feature of this implementation is that the browser version produces deterministic outputs when given:
+- The same random seed (set via the `setSeed()` method, available in the browser implementation)
 - The same sequence of inputs
 
-This allows for predictable and reproducible conversations, which is valuable for testing and educational purposes.
+This allows for predictable and reproducible conversations, which is valuable for testing and educational purposes. The Node.js version uses JavaScript's built-in Math.random() and does not support seeded randomness directly.
 
 ## Files in this Repository
 
 - `elizabot.js` - Original Node.js implementation
 - `elizabot-browser.js` - Browser implementation that produces identical output
-- `elizaKeywords.js` - The pattern matching rules used by the ELIZA bot
+- `index.html` - Main interface for interacting with ElizaBot
+- `compare.html` - Side-by-side comparison of both implementations
 - `elizabot-test.js` - Node.js test script that verifies both implementations produce identical output
 - `elizabot-deterministic-test.js` - Comprehensive test suite that verifies deterministic behavior
 - `elizabot-browser-test.html` - Interactive browser test interface
 - `elizabot-browser-deterministic-test.html` - Browser test for verifying deterministic behavior
+- `test-determinism.js` - Script to test determinism with different random seeds
+- `test-browser-compatibility.js` - Script to test compatibility between implementations
 
 ## Running the Tests
 
@@ -59,14 +69,25 @@ To verify deterministic behavior in the browser:
 2. Set a random seed
 3. Click "Run Deterministic Test" to verify identical outputs with the same seed
 
+## Local Development
+
+To run the project locally:
+
+```bash
+npm install
+npm start
+```
+
+Then open your browser to `http://localhost:3000` to see the application running.
+
 ## Implementation Notes
 
-The browser implementation has been carefully rewritten to match the original Node.js version. Key elements include:
+The browser implementation has been carefully rewritten to provide deterministic behavior while maintaining compatibility with the original Node.js version. Key elements include:
 
-1. **Identical random number generation** - Both versions use the same seeded random number generator algorithm
-2. **Identical pattern matching** - Both versions process regular expressions exactly the same way
-3. **Identical memory system** - Both versions maintain and retrieve memories identically
-4. **Same response selection** - Both versions choose responses according to the same criteria
+1. **Seeded random number generation** - The browser version includes a custom random number generator that can be seeded for reproducible results
+2. **Identical pattern matching** - Both versions process regular expressions in the same way
+3. **Identical memory system** - Both versions maintain and retrieve memories using the same approach
+4. **Same response selection logic** - Both versions choose responses according to the same criteria, though the actual selections may differ due to randomization differences
 
 ## Usage
 
@@ -74,9 +95,6 @@ The browser implementation has been carefully rewritten to match the original No
 
 ```javascript
 const eliza = require('./elizabot.js');
-
-// Set a specific random seed for reproducible outputs
-eliza.setSeed(42);
 
 // Get initial greeting
 console.log(eliza.start());
@@ -91,10 +109,7 @@ console.log(eliza.bye());
 ### Browser
 
 ```html
-<!-- First load the keywords -->
-<script src="elizaKeywords.js"></script>
-
-<!-- Then load the ElizaBot implementation -->
+<!-- Load the ElizaBot implementation -->
 <script src="elizabot-browser.js"></script>
 
 <script>
@@ -116,13 +131,14 @@ console.log(eliza.bye());
 
 This implementation is provided for educational purposes.
 
-# ElizaBot.js Determinism Test
+# ElizaBot Browser Determinism Tests
 
-This project tests whether elizabot.js produces deterministic outputs given the same inputs and random seed.
+This project tests whether elizabot-browser.js produces deterministic outputs given the same inputs and random seed.
 
 ## Files
 
 - `elizabot.js` - The original ElizaBot implementation
+- `elizabot-browser.js` - The browser implementation with seeded randomness
 - `eliza-inputs.txt` - Original set of inputs
 - `eliza-inputs-short.txt` - A shorter conversation
 - `eliza-inputs-family.txt` - Family-related conversation including "Dad" and "Are you my father?"
@@ -130,13 +146,13 @@ This project tests whether elizabot.js produces deterministic outputs given the 
 - `generate-reference.js` - Script to generate reference conversations
 - `eliza-reference.json` - JSON file with reference conversations
 - `eliza-reference.txt` - Human-readable reference conversations
-- `test-determinism.js` - Script to test the determinism of ElizaBot
+- `test-determinism.js` - Script to test the determinism of the browser implementation
 
 ## How It Works
 
 1. **Multiple Conversation Types**: We test conversations of various lengths and topics
 2. **Fixed Inputs**: Each conversation uses a consistent set of inputs
-3. **Seeded Randomization**: We replace JavaScript's `Math.random()` with our own deterministic random function
+3. **Seeded Randomization**: We use the browser implementation's seeded random function
 4. **Reference Generation**: We create reference outputs with known seeds
 5. **Determinism Testing**: We verify that given the same inputs and seeds, the outputs are always the same
 
@@ -154,17 +170,17 @@ node generate-reference.js
 node test-determinism.js
 ```
 
-If all tests pass, it confirms that elizabot.js is deterministic when given a consistent random seed.
+If all tests pass, it confirms that elizabot-browser.js is deterministic when given a consistent random seed.
 
 ## Understanding the Results
 
 The test generates conversations with different seeds to demonstrate that:
 
-1. With the same seed, elizabot.js will always produce the same responses
+1. With the same seed, elizabot-browser.js will always produce the same responses
 2. With different seeds, the responses may vary
 3. The variation is solely due to the random seed, not any non-deterministic behavior
 
-This shows that elizabot.js is completely deterministic when controlling for randomness.
+This shows that elizabot-browser.js is completely deterministic when controlling for randomness.
 
 # ElizaBot Browser Compatibility Tests
 
@@ -201,9 +217,10 @@ The tests use several input files to verify different conversation scenarios:
 
 ## Technical Approach
 
-1. Each test initializes both implementations with the same random seed
-2. The same inputs are fed to both implementations
-3. Responses are compared to ensure they're identical
-4. With the determinism test, responses are also compared against a pre-generated reference
+1. The browser implementation is initialized with a specified random seed
+2. The Node.js implementation uses its default randomization
+3. The same inputs are fed to both implementations
+4. The test verifies that the browser implementation produces consistent outputs with the same seed
+5. The browser implementation is adapted to run in Node.js for easier automated testing
 
-This confirms that `elizabot-browser.js` maintains full compatibility with the original `elizabot.js` implementation.
+These tests focus on verifying that the browser implementation maintains consistent, deterministic behavior while preserving the same pattern matching and response selection logic as the original Node.js implementation.
