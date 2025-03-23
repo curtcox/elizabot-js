@@ -46,31 +46,9 @@ const elizabot = (() => {
                 throw new Error("Random function is required");
             }
 
-            this.elizaInitials = [
-                "How do you do.  Please tell me your problem.",
-                "Please tell me what's been bothering you.",
-                "Is something troubling you ?",
-                "Im here. Talk to me.",
-                "Talk to me",
-                "Top of the morning to you.",
-                "Thanks for waking me up"
-            ];
-
-            this.elizaFinals = [
-                "Goodbye.  It was nice talking to you.",
-                "Goodbye.  This was really a nice talk.",
-                "Goodbye.  I'm looking forward to our next session.",
-                "This was a good session, wasn't it -- but time is over now.   Goodbye.",
-                "Maybe we could discuss this moreover in our next session ?   Goodbye."
-            ];
-
-            this.elizaQuits = [
-                "bye",
-                "goodbye",
-                "done",
-                "exit",
-                "quit"
-            ];
+            this.elizaInitials = elizaInitialsData;
+            this.elizaFinals = elizaFinalsData;
+            this.elizaQuits = elizaQuitsData;
 
             this.elizaPres = elizaPresData;
             this.elizaPosts = elizaPostsData;
