@@ -105,16 +105,19 @@ const elizabot = (() => {
                 "i'm", "you are"
             ];
 
-            this.elizaSynons = {
-                "be": ["am", "is", "are", "was"],
-                "belief": ["feel", "think", "believe", "wish"],
-                "cannot": ["can't"],
-                "desire": ["want", "need"],
-                "everyone": ["everybody", "nobody", "noone"],
-                "family": ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child", "uncle", "aunt", "child"],
-                "happy": ["elated", "glad", "better"],
-                "sad": ["unhappy", "depressed", "sick"]
-            };
+            // Use the external data for synonyms if available
+            if (typeof window !== 'undefined' && window.elizaSynonsData) {
+                this.elizaSynons = window.elizaSynonsData;
+            } else if (typeof elizaSynonsData !== 'undefined') {
+                this.elizaSynons = elizaSynonsData;
+            } else {
+                // Fallback to a minimal set if data file is not loaded
+                console.error("Synonyms data not found! The chatbot may not work properly.");
+                this.elizaSynons = {
+                    "be": ["am", "is", "are", "was"],
+                    "belief": ["feel", "think", "believe", "wish"]
+                };
+            }
 
             // Use the external data for keywords if available
             if (typeof window !== 'undefined' && window.elizaKeywordsData) {
