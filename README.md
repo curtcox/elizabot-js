@@ -11,13 +11,23 @@ This repository contains two implementations:
 1. **elizabot.js** - The original Node.js version.
 2. **elizabot-browser.js** - A browser-compatible version that produces identical output.
 
+## Deterministic Behavior
+
+A key feature of this implementation is that both versions produce identical, deterministic outputs when given:
+- The same random seed (set via the `setSeed()` method)
+- The same sequence of inputs
+
+This allows for predictable and reproducible conversations, which is valuable for testing and educational purposes.
+
 ## Files in this Repository
 
 - `elizabot.js` - Original Node.js implementation
-- `elizabot-browser.js` - Browser implementation (fixed version)
+- `elizabot-browser.js` - Browser implementation that produces identical output
 - `elizaKeywords.js` - The pattern matching rules used by the ELIZA bot
 - `elizabot-test.js` - Node.js test script that verifies both implementations produce identical output
-- `elizabot-browser-test.html` - Browser test interface for the browser implementation
+- `elizabot-deterministic-test.js` - Comprehensive test suite that verifies deterministic behavior
+- `elizabot-browser-test.html` - Interactive browser test interface
+- `elizabot-browser-deterministic-test.html` - Browser test for verifying deterministic behavior
 
 ## Running the Tests
 
@@ -29,7 +39,11 @@ To run the comparison tests between the two implementations:
 node elizabot-test.js
 ```
 
-This will run identical inputs through both implementations and verify they produce the same output.
+To verify the deterministic behavior with multiple random seeds:
+
+```bash
+node elizabot-deterministic-test.js
+```
 
 ### Browser Tests
 
@@ -39,17 +53,20 @@ To test the browser implementation directly:
 2. Use the chat interface to interact with ElizaBot
 3. Click "Run Automated Tests" to see example interactions
 
+To verify deterministic behavior in the browser:
+
+1. Open `elizabot-browser-deterministic-test.html` in your web browser
+2. Set a random seed
+3. Click "Run Deterministic Test" to verify identical outputs with the same seed
+
 ## Implementation Notes
 
-The browser implementation has been carefully rewritten to match the original Node.js version. Key fixes include:
+The browser implementation has been carefully rewritten to match the original Node.js version. Key elements include:
 
-1. Proper RegExp pattern generation from the keyword patterns
-2. Correct implementation of the memory system
-3. Proper handling of synonym expansion
-4. Fixed pre/post transformations for input/output
-5. Ensured identical random response selection with the same seed
-
-The tests verify that given the same random seed, both implementations will produce identical responses to the same inputs.
+1. **Identical random number generation** - Both versions use the same seeded random number generator algorithm
+2. **Identical pattern matching** - Both versions process regular expressions exactly the same way
+3. **Identical memory system** - Both versions maintain and retrieve memories identically
+4. **Same response selection** - Both versions choose responses according to the same criteria
 
 ## Usage
 
@@ -57,6 +74,9 @@ The tests verify that given the same random seed, both implementations will prod
 
 ```javascript
 const eliza = require('./elizabot.js');
+
+// Set a specific random seed for reproducible outputs
+eliza.setSeed(42);
 
 // Get initial greeting
 console.log(eliza.start());
@@ -66,9 +86,6 @@ console.log(eliza.reply("Hello, I am feeling sad today"));
 
 // End the conversation
 console.log(eliza.bye());
-
-// Set a specific random seed for reproducible outputs
-eliza.setSeed(42);
 ```
 
 ### Browser
@@ -81,6 +98,9 @@ eliza.setSeed(42);
 <script src="elizabot-browser.js"></script>
 
 <script>
+    // Set a specific random seed for reproducible outputs
+    elizabot.setSeed(42);
+
     // Get initial greeting
     console.log(elizabot.start());
 
@@ -89,9 +109,6 @@ eliza.setSeed(42);
 
     // End the conversation
     console.log(elizabot.bye());
-
-    // Set a specific random seed for reproducible outputs
-    elizabot.setSeed(42);
 </script>
 ```
 

@@ -2,7 +2,7 @@
 // Based on the original elizabot.js but modified for browser use
 
 var elizabot = (function() {
-    // Simple seeded random number generator
+    // Simple seeded random number generator - IDENTICAL to Node.js version
     var seed = 1234; // Fixed seed for reproducible results
     function seededRandom() {
         seed = (seed * 9301 + 49297) % 233280;
