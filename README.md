@@ -3,6 +3,8 @@ elizabot-js
 
 Eliza JS bot based on www.masswerk.at/elizabot and http://en.wikipedia.org/wiki/ELIZA
 
+Try it online: [ElizaBot Demo](https://curtcox.github.io/elizabot-js/)
+
 ## Usage via Node.js
 
 ```javascript
