@@ -75,6 +75,7 @@
         <button id="send-button">Send</button>
     </div>
 
+    <!-- Load all the data files first -->
     <script src="data/eliza-initials.js"></script>
     <script src="data/eliza-finals.js"></script>
     <script src="data/eliza-quits.js"></script>
@@ -83,14 +84,17 @@
     <script src="data/eliza-synons.js"></script>
     <script src="data/eliza-keywords.js"></script>
     <script src="data/eliza-post-transforms.js"></script>
+
+    <!-- Load the fixed elizabot.js -->
     <script src="elizabot-2025.js"></script>
+
     <script>
         // Initialize variables
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
 
-        // Add initial bot message
+        // Add initial bot message (will work now that elizabot is in the global scope)
         addBotMessage(elizabot.start());
 
         // Event listeners

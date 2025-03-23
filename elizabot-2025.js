@@ -1,15 +1,5 @@
 // ElizaBot for browser
-// Based on the original elizabot.js but modified for browser use
-
-// Load data
-const elizaInitialsData = require('./data/eliza-initials.js');
-const elizaFinalsData = require('./data/eliza-finals.js');
-const elizaQuitsData = require('./data/eliza-quits.js');
-const elizaPresData = require('./data/eliza-pres.js');
-const elizaPostsData = require('./data/eliza-posts.js');
-const elizaSynonsData = require('./data/eliza-synons.js');
-const elizaKeywordsData = require('./data/eliza-keywords.js');
-const elizaPostTransformsData = require('./data/eliza-post-transforms.js');
+// Modified version that works directly in the browser without module loading issues
 
 // Simple seeded random number generator
 let seed = 1234; // Fixed seed for reproducible results
@@ -25,14 +15,17 @@ class ElizaBot {
             throw new Error("Random function is required");
         }
 
-        this.elizaInitials = elizaInitialsData;
-        this.elizaFinals = elizaFinalsData;
-        this.elizaQuits = elizaQuitsData;
-        this.elizaPres = elizaPresData;
-        this.elizaPosts = elizaPostsData;
-        this.elizaSynons = elizaSynonsData;
-        this.elizaKeywords = elizaKeywordsData;
-        this.elizaPostTransforms = elizaPostTransformsData;
+        // Check if running in browser or Node.js environment
+        if (typeof window !== 'undefined') {
+            this.elizaInitials = window.elizaInitialsData;
+            this.elizaFinals = window.elizaFinalsData;
+            this.elizaQuits = window.elizaQuitsData;
+            this.elizaPres = window.elizaPresData;
+            this.elizaPosts = window.elizaPostsData;
+            this.elizaSynons = window.elizaSynonsData;
+            this.elizaKeywords = window.elizaKeywordsData;
+            this.elizaPostTransforms = window.elizaPostTransformsData;
+        }
 
         this.randomFunc = randomFunc;
         this.capitalizeFirstLetter = true;
@@ -88,7 +81,6 @@ class ElizaBot {
             this.elizaKeywords[k][3] = k; // save original index for sorting
             for (let i = 0; i < rules.length; i++) {
                 const r = rules[i];
-                console.log("Init1 @" + k + " " + i + " " + r[0].length);
                 // check mem flag and store it as decomp's element 2
                 if (r[0].charAt(0) == '$') {
                     let ofs = 1;
@@ -363,56 +355,58 @@ class ElizaBot {
     }
 }
 
-// Create browser-compatible interface
-const elizabot = (() => {
-    const eliza = {};
+// Create browser-compatible interface and expose it globally
+if (typeof window !== 'undefined') {
+    window.ElizaBot = ElizaBot;
+    window.elizabot = (() => {
+        const eliza = {};
+        let botInstance = null;
 
-    eliza.reply = function(r) {
-        if (this.bot == null) {
-            this.bot = new ElizaBot(seededRandom);
-        }
-        return this.bot.transform(r);
-    };
-
-    eliza.start = function() {
-        if (this.bot == null) {
-            this.bot = new ElizaBot(seededRandom);
-        }
-        return this.bot.getInitial();
-    };
-
-    eliza.bye = function() {
-        if (this.bot == null) {
-            this.bot = new ElizaBot(seededRandom);
-        }
-        return this.bot.getFinal();
-    };
-
-    // Set or reset the random seed
-    eliza.setSeed = function(newSeed) {
-        seed = newSeed || 1234;
-        if (this.bot) {
-            this.bot.reset();
-        }
-    };
-
-    if (typeof Array.prototype.shift == 'undefined') {
-        Array.prototype.shift = function() {
-            if (this.length == 0) return null;
-            const e0 = this[0];
-            for (let i = 1; i < this.length; i++) this[i - 1] = this[i];
-            this.length--;
-            return e0;
+        eliza.reply = function(r) {
+            if (botInstance == null) {
+                botInstance = new ElizaBot(seededRandom);
+            }
+            return botInstance.transform(r);
         };
-    }
 
-    return eliza;
-})();
+        eliza.start = function() {
+            if (botInstance == null) {
+                botInstance = new ElizaBot(seededRandom);
+            }
+            return botInstance.getInitial();
+        };
 
-// Export for Node.js environments
+        eliza.bye = function() {
+            if (botInstance == null) {
+                botInstance = new ElizaBot(seededRandom);
+            }
+            return botInstance.getFinal();
+        };
+
+        // Set or reset the random seed
+        eliza.setSeed = function(newSeed) {
+            seed = newSeed || 1234;
+            if (botInstance) {
+                botInstance.reset();
+            }
+        };
+
+        // Ensure Array.shift is defined
+        if (typeof Array.prototype.shift == 'undefined') {
+            Array.prototype.shift = function() {
+                if (this.length == 0) return null;
+                const e0 = this[0];
+                for (let i = 1; i < this.length; i++) this[i - 1] = this[i];
+                this.length--;
+                return e0;
+            };
+        }
+
+        return eliza;
+    })();
+}
+
+// Add Node.js module exports support
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        elizabot,
-        ElizaBot
-    };
+    module.exports = { ElizaBot };
 }

@@ -2,8 +2,26 @@
  * Unit Tests for elizabot-2025.js
  */
 
-// Load required modules
-const { ElizaBot } = require('./elizabot-2025.js');
+// Mock the window object for browser compatibility
+if (typeof window === 'undefined') {
+    global.window = {};
+}
+
+// Load the data files required by elizabot-2025.js
+window.elizaInitialsData = require('./data/eliza-initials.js');
+window.elizaFinalsData = require('./data/eliza-finals.js');
+window.elizaQuitsData = require('./data/eliza-quits.js');
+window.elizaPresData = require('./data/eliza-pres.js');
+window.elizaPostsData = require('./data/eliza-posts.js');
+window.elizaSynonsData = require('./data/eliza-synons.js');
+window.elizaKeywordsData = require('./data/eliza-keywords.js');
+window.elizaPostTransformsData = require('./data/eliza-post-transforms.js');
+
+// Now load elizabot-2025.js which will register ElizaBot in window
+require('./elizabot-2025.js');
+
+// Now we can access ElizaBot from window
+const ElizaBot = window.ElizaBot;
 
 // Setup performance timing for Node.js
 const getTime = () => {
@@ -23,54 +41,49 @@ const DEBUG = true;
 let totalTests = 0;
 let passedTests = 0;
 
-// Remove the ElizaBot class definition as we're importing it now
+// Use the window.elizabot interface that's created by the browser script
+const elizabot = window.elizabot;
 
-// Create a simple singleton interface to the ElizaBot
-const elizabot = (() => {
-    // Simple seeded random number generator
-    let seed = 1234; // Fixed seed for reproducible results
-    const seededRandom = () => {
-        seed = (seed * 9301 + 49297) % 233280;
-        return seed / 233280;
+// Add a helper function to process decomposition patterns similar to how ElizaBot._init does
+function processDecompPattern(pattern) {
+    // This simulates the pattern processing done in ElizaBot._init
+    // to handle asterisks and other special characters
+
+    // Patterns like "* say (.*)" would normally be converted to "\s*(.*)\s*say (.*)"
+    if (/^\s*\*\s*$/.test(pattern)) {
+        return '\\s*(.*)\\s*';
+    } else if (/^\s*\*\s*(\S)/.test(pattern)) {
+        // Leading asterisk: * say (.*) -> \s*(.*)\s*say (.*)
+        const m = /^\s*\*\s*(\S)/.exec(pattern);
+        let lp = '\\s*(.*)\\s*';
+        if (m[1] !== ')' && m[1] !== '\\') lp += '\\b';
+        return lp + pattern.substring(m.index + m[0].length - 1);
+    } else if (/(\S)\s*\*\s*$/.test(pattern)) {
+        // Trailing asterisk: say * -> say\s*(.*)
+        const m = /(\S)\s*\*\s*$/.exec(pattern);
+        let lp = pattern.substring(0, m.index + 1);
+        if (m[1] !== '(') lp += '\\b';
+        return lp + '\\s*(.*)\\s*';
+    } else if (/(\S)\s*\*\s*(\S)/.test(pattern)) {
+        // Asterisk in the middle: say * to me -> say\s*(.*)\s*to me
+        let m = /(\S)\s*\*\s*(\S)/.exec(pattern);
+        let lp = '';
+        let rp = pattern;
+        while (m) {
+            lp += rp.substring(0, m.index + 1);
+            if (m[1] !== ')') lp += '\\b';
+            lp += '\\s*(.*)\\s*';
+            if (m[2] !== '(' && m[2] !== '\\') lp += '\\b';
+            lp += m[2];
+            rp = rp.substring(m.index + m[0].length);
+            m = /(\S)\s*\*\s*(\S)/.exec(rp);
+        }
+        return lp + rp;
     }
 
-    const eliza = {};
-    let bot = null;
-
-    eliza.reply = function(r) {
-        if (bot == null) {
-            bot = new ElizaBot(seededRandom);
-        }
-        return bot.transform(r);
-    };
-
-    eliza.start = function() {
-        if (bot == null) {
-            bot = new ElizaBot(seededRandom);
-        }
-        return bot.getInitial();
-    };
-
-    eliza.bye = function() {
-        if (bot == null) {
-            bot = new ElizaBot(seededRandom);
-        }
-        return bot.getFinal();
-    };
-
-    // Set or reset the random seed
-    eliza.setSeed = function(newSeed) {
-        seed = newSeed || 1234;
-        if (bot) {
-            bot.reset();
-        }
-    };
-
-    return eliza;
-})();
-
-// Track test results
-// Variables now declared at the top of the file
+    // Replace multiple whitespace with \s+
+    return pattern.replace(/\s+/g, '\\s+');
+}
 
 // Test utility function
 function test(name, testFunction) {
