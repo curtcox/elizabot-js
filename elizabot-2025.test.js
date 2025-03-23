@@ -6,6 +6,9 @@
 const fs = require('fs');
 const path = require('path');
 
+// Debug flag - set to true to see which test is currently running
+const DEBUG = true;
+
 // Load all the data files first and make them available
 const elizaInitialsData = require('./data/eliza-initials.js');
 const elizaFinalsData = require('./data/eliza-finals.js');
@@ -423,6 +426,9 @@ let totalTests = 0;
 // Test utility function
 function test(name, testFunction) {
     totalTests++;
+    if (DEBUG) {
+        console.log(`🔍 RUNNING: ${name}`);
+    }
     try {
         testFunction();
         console.log(`✅ PASS: ${name}`);
@@ -1227,49 +1233,217 @@ test("Parameter substitution with multiple post-substitutions", () => {
 });
 
 // Test actual code from ElizaBot._execRule for post-substitution in parameters
-test("Post-substitution in parameters as implemented in ElizaBot", () => {
+test("Post-substitution of a single word", () => {
     const bot = new ElizaBot(() => 0);
 
-    // Set up the post-substitution data
-    bot.elizaPosts = ["am", "are", "I", "you"];
-    bot.posts = {"am": "are", "I": "you"};
-    bot.postExp = new RegExp('\\b(' + ["am", "I"].join('|') + ')\\b');
+    // Set up simple post-substitution data
+    bot.posts = {"am": "are"};
+    bot.postExp = new RegExp('\\b(' + "am" + ')\\b');
 
-    // Mock a parameter substitution scenario similar to _execRule
+    // Simple string with one match
+    const text = "I am happy";
+
+    // Perform post-substitution like in _execRule
+    let m2 = bot.postExp.exec(text);
+    let result = '';
+    let remainingText = text;
+
+    if (m2) {
+        result += remainingText.substring(0, m2.index) + bot.posts[m2[1]];
+        remainingText = remainingText.substring(m2.index + m2[0].length);
+    }
+
+    result += remainingText;
+    assertEqual(result, "I are happy", "Should replace 'am' with 'are'");
+});
+
+test("Post-substitution with multiple matches", () => {
+    const bot = new ElizaBot(() => 0);
+
+    // Set up multiple post-substitutions
+    bot.posts = {"I": "you", "am": "are"};
+    bot.postExp = new RegExp('\\b(' + ["I", "am"].join('|') + ')\\b');
+
+    // String with multiple matches
+    const text = "I am happy and I am sad";
+
+    // Apply all post-substitutions
+    let m2 = bot.postExp.exec(text);
+    let result = '';
+    let remainingText = text;
+
+    while (m2) {
+        result += remainingText.substring(0, m2.index) + bot.posts[m2[1]];
+        remainingText = remainingText.substring(m2.index + m2[0].length);
+        m2 = bot.postExp.exec(remainingText);
+    }
+
+    result += remainingText;
+    assertEqual(result, "you are happy and you are sad",
+        "Should replace all occurrences of 'I' with 'you' and 'am' with 'are'");
+});
+
+test("Post-substitution with match at string beginning", () => {
+    const bot = new ElizaBot(() => 0);
+
+    // Set up post-substitution for first word
+    bot.posts = {"I": "You"};
+    bot.postExp = new RegExp('\\b(' + "I" + ')\\b');
+
+    // String with match at beginning
+    const text = "I like cookies";
+
+    // Apply post-substitution
+    let m2 = bot.postExp.exec(text);
+    let result = '';
+    let remainingText = text;
+
+    if (m2) {
+        result += remainingText.substring(0, m2.index) + bot.posts[m2[1]];
+        remainingText = remainingText.substring(m2.index + m2[0].length);
+    }
+
+    result += remainingText;
+    assertEqual(result, "You like cookies", "Should replace word at beginning of string");
+});
+
+test("Post-substitution with match at string end", () => {
+    const bot = new ElizaBot(() => 0);
+
+    // Set up post-substitution for last word
+    bot.posts = {"me": "you"};
+    bot.postExp = new RegExp('\\b(' + "me" + ')\\b');
+
+    // String with match at end
+    const text = "Please help me";
+
+    // Apply post-substitution
+    let m2 = bot.postExp.exec(text);
+    let result = '';
+    let remainingText = text;
+
+    if (m2) {
+        result += remainingText.substring(0, m2.index) + bot.posts[m2[1]];
+        remainingText = remainingText.substring(m2.index + m2[0].length);
+    }
+
+    result += remainingText;
+    assertEqual(result, "Please help you", "Should replace word at end of string");
+});
+
+test("Post-substitution with no matches", () => {
+    const bot = new ElizaBot(() => 0);
+
+    // Set up post-substitution
+    bot.posts = {"xyz": "abc"};
+    bot.postExp = new RegExp('\\b(' + "xyz" + ')\\b');
+
+    // String with no matches
+    const text = "Hello world";
+
+    // Try to apply post-substitution
+    let m2 = bot.postExp.exec(text);
+    let result = text; // Should remain unchanged
+
+    assertEqual(result, "Hello world", "String should remain unchanged when no matches");
+    assert(m2 === null, "No matches should be found");
+});
+
+test("Post-substitution with parameter substitution", () => {
+    const bot = new ElizaBot(() => 0);
+
+    // Set up post-substitution
+    bot.posts = {"am": "are"};
+    bot.postExp = new RegExp('\\b(' + "am" + ')\\b');
+
+    // Mock parameter substitution scenario
     const paramre = /\(([0-9]+)\)/;
-    const rpl = "You said: (1)";
-    const m = ["I am sad", "I am sad"]; // Mock match result
+    const template = "You said: (1)";
+    const mockMatch = ["full match", "I am happy"];
 
-    // Extract the specific code from _execRule that handles parameter substitution
-    // with post-processing
-    let result = rpl;
+    // First apply parameter substitution
+    let result = template;
     let m1 = paramre.exec(result);
 
     if (m1) {
-        let param = m[parseInt(m1[1])];
+        const paramNum = parseInt(m1[1]);
+        let param = mockMatch[paramNum];
 
-        // This is the critical part from _execRule that handles post-transforms
-        if (bot.postExp) {
-            let m2 = bot.postExp.exec(param);
-            if (m2) {
-                let lp2 = '';
-                let rp2 = param;
-                while (m2) {
-                    lp2 += rp2.substring(0, m2.index) + bot.posts[m2[1]];
-                    rp2 = rp2.substring(m2.index + m2[0].length);
-                    m2 = bot.postExp.exec(rp2);
-                }
-                param = lp2 + rp2;
-            }
+        // Then apply post-substitution to the parameter value
+        let m2 = bot.postExp.exec(param);
+        let processedParam = '';
+        let remainingText = param;
+
+        if (m2) {
+            processedParam += remainingText.substring(0, m2.index) + bot.posts[m2[1]];
+            remainingText = remainingText.substring(m2.index + m2[0].length);
+            processedParam += remainingText;
+        } else {
+            processedParam = param;
         }
 
-        const before = result.substring(0, m1.index);
-        const after = result.substring(m1.index + m1[0].length);
-        result = before + param + after;
+        // Replace in the template
+        result = result.substring(0, m1.index) + processedParam + result.substring(m1.index + m1[0].length);
     }
 
-    assertEqual(result, "You said: you are sad",
-        "ElizaBot's post-substitution implementation should work correctly");
+    assertEqual(result, "You said: I are happy",
+        "Should apply post-substitution to parameter value");
+});
+
+test("Post-substitution with exact _execRule algorithm", () => {
+    const bot = new ElizaBot(() => 0);
+
+    // Set up the post-substitution data - exactly like in the original test
+    bot.posts = {"am": "are", "I": "you"};
+    bot.postExp = new RegExp('\\b(' + ["am", "I"].join('|') + ')\\b');
+
+    // This test uses the exact algorithm from _execRule
+    const param = "I am sad";
+    let processedParam = param;
+
+    // This is the critical part from _execRule that handles post-transforms
+    if (bot.postExp) {
+        let m2 = bot.postExp.exec(param);
+        if (m2) {
+            let lp2 = '';
+            let rp2 = param;
+            while (m2) {
+                lp2 += rp2.substring(0, m2.index) + bot.posts[m2[1]];
+                rp2 = rp2.substring(m2.index + m2[0].length);
+                m2 = bot.postExp.exec(rp2);
+            }
+            processedParam = lp2 + rp2;
+        }
+    }
+
+    assertEqual(processedParam, "you are sad",
+        "The exact _execRule algorithm should process post-substitutions correctly");
+});
+
+test("Post-substitution with multiple sequential same-word matches", () => {
+    const bot = new ElizaBot(() => 0);
+
+    // Set up post-substitution
+    bot.posts = {"very": "extremely"};
+    bot.postExp = new RegExp('\\b(' + "very" + ')\\b');
+
+    // String with repeated matches
+    const text = "I am very very happy";
+
+    // Apply all post-substitutions
+    let m2 = bot.postExp.exec(text);
+    let result = '';
+    let remainingText = text;
+
+    while (m2) {
+        result += remainingText.substring(0, m2.index) + bot.posts[m2[1]];
+        remainingText = remainingText.substring(m2.index + m2[0].length);
+        m2 = bot.postExp.exec(remainingText);
+    }
+
+    result += remainingText;
+    assertEqual(result, "I am extremely extremely happy",
+        "Should replace all occurrences of repeated words");
 });
 
 // Test interaction between parameter substitution and capitalization
