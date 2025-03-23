@@ -2,7 +2,7 @@
 // This file contains the post transform patterns for the Eliza chatbot
 
 const elizaPostTransformsData = [
-    / old old/g, " old",
+    /old old/g, " old",
     /\bthey were( not)? me\b/g, "it was$1 me",
     /\bthey are( not)? me\b/g, "it is$1 me",
     /Are they( always)? me\b/, "it is$1 me",
