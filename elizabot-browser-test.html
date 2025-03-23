@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElizaBot Browser Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        #chat-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .eliza-message {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: #e1f5fe;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            margin-left: auto;
+            text-align: right;
+        }
+        #user-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        #send-button, #reset-button, #test-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #test-button {
+            background-color: #2196F3;
+        }
+        #reset-button {
+            background-color: #f44336;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        .test-results {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #2196F3;
+        }
+        .test-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>ElizaBot Browser Test</h1>
+
+    <div id="chat-container">
+        <!-- Chat messages will appear here -->
+    </div>
+
+    <input type="text" id="user-input" placeholder="Type your message...">
+
+    <div class="button-container">
+        <button id="send-button">Send</button>
+        <button id="reset-button">Reset Conversation</button>
+        <button id="test-button">Run Automated Tests</button>
+    </div>
+
+    <div id="test-results" class="test-results" style="display: none;">
+        <h2>Automated Test Results</h2>
+        <div id="test-content"></div>
+    </div>
+
+    <!-- Load the keyword definitions first -->
+    <script src="elizaKeywords.js"></script>
+
+    <!-- Load the ElizaBot browser implementation -->
+    <script src="elizabot-browser.js"></script>
+
+    <script>
+        // Initialize variables
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const resetButton = document.getElementById('reset-button');
+        const testButton = document.getElementById('test-button');
+        const testResults = document.getElementById('test-results');
+        const testContent = document.getElementById('test-content');
+
+        // Initialize ElizaBot
+        let eliza = elizabot;
+        eliza.setSeed(42); // Set a fixed seed for reproducible results
+
+        // Start conversation
+        function startConversation() {
+            // Clear chat container
+            chatContainer.innerHTML = '';
+
+            // Add initial message
+            const initialMessage = eliza.start();
+            addMessage(initialMessage, 'eliza');
+        }
+
+        // Add a message to the chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'eliza' ? 'eliza-message' : 'user-message';
+            messageDiv.textContent = text;
+            chatContainer.appendChild(messageDiv);
+
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Send a message
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+
+            // Add user message
+            addMessage(message, 'user');
+
+            // Clear input
+            userInput.value = '';
+
+            // Get ElizaBot's response
+            setTimeout(() => {
+                let response;
+                if (message.toLowerCase() === 'bye' ||
+                    message.toLowerCase() === 'goodbye' ||
+                    message.toLowerCase() === 'exit' ||
+                    message.toLowerCase() === 'quit') {
+                    response = eliza.bye();
+                } else {
+                    response = eliza.reply(message);
+                }
+                addMessage(response, 'eliza');
+            }, 500); // Slight delay for better UX
+        }
+
+        // Run automated tests
+        function runTests() {
+            // Define test inputs
+            const testInputs = [
+                "Hello there",
+                "I am feeling sad",
+                "I don't know what to do with my life",
+                "My mother always told me to be good",
+                "I remember when I was a child",
+                "computers scare me sometimes",
+                "Do you remember me from last time?",
+                "I dreamed about flying last night",
+                "you are very helpful",
+                "I can't sleep at night",
+                "I want to be happy",
+                "Why can't I get what I want?",
+                "I'm sorry for taking your time"
+            ];
+
+            // Reset ElizaBot for tests
+            eliza.setSeed(42);
+
+            // Clear test results
+            testContent.innerHTML = '';
+
+            // Add initial greeting
+            const initialMessage = eliza.start();
+            addTestResult('Initial greeting', initialMessage);
+
+            // Process each test input
+            testInputs.forEach((input, index) => {
+                const response = eliza.reply(input);
+                addTestResult(`Input ${index + 1}: "${input}"`, response);
+            });
+
+            // Add final goodbye
+            const finalMessage = eliza.bye();
+            addTestResult('Final goodbye', finalMessage);
+
+            // Show test results
+            testResults.style.display = 'block';
+        }
+
+        // Add a test result to the test results section
+        function addTestResult(label, response) {
+            const testItem = document.createElement('div');
+            testItem.className = 'test-item';
+
+            const labelElement = document.createElement('strong');
+            labelElement.textContent = label;
+
+            const responseElement = document.createElement('p');
+            responseElement.textContent = `Response: "${response}"`;
+
+            testItem.appendChild(labelElement);
+            testItem.appendChild(document.createElement('br'));
+            testItem.appendChild(responseElement);
+
+            testContent.appendChild(testItem);
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        resetButton.addEventListener('click', startConversation);
+        testButton.addEventListener('click', runTests);
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initialize the conversation
+        startConversation();
+    </script>
+</body>
+</html>
