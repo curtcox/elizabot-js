@@ -72,65 +72,10 @@ const elizabot = (() => {
                 "quit"
             ];
 
-            // Use the external data for pre-substitutions if available
-            if (typeof window !== 'undefined' && window.elizaPresData) {
-                this.elizaPres = window.elizaPresData;
-            } else if (typeof elizaPresData !== 'undefined') {
-                this.elizaPres = elizaPresData;
-            } else {
-                // Fallback to a minimal set if data file is not loaded
-                console.error("Pre-substitution data not found! The chatbot may not work properly.");
-                this.elizaPres = [
-                    "dont", "don't",
-                    "cant", "can't",
-                    "wont", "won't"
-                ];
-            }
-
-            this.elizaPosts = [
-                "am", "are",
-                "your", "my",
-                "me", "you",
-                "myself", "yourself",
-                "yourself", "myself",
-                "i", "you",
-                "you", "I",
-                "my", "your",
-                "i'm", "you are"
-            ];
-
-            // Use the external data for synonyms if available
-            if (typeof window !== 'undefined' && window.elizaSynonsData) {
-                this.elizaSynons = window.elizaSynonsData;
-            } else if (typeof elizaSynonsData !== 'undefined') {
-                this.elizaSynons = elizaSynonsData;
-            } else {
-                // Fallback to a minimal set if data file is not loaded
-                console.error("Synonyms data not found! The chatbot may not work properly.");
-                this.elizaSynons = {
-                    "be": ["am", "is", "are", "was"],
-                    "belief": ["feel", "think", "believe", "wish"]
-                };
-            }
-
-            // Use the external data for keywords if available
-            if (typeof window !== 'undefined' && window.elizaKeywordsData) {
-                this.elizaKeywords = window.elizaKeywordsData;
-            } else if (typeof elizaKeywordsData !== 'undefined') {
-                this.elizaKeywords = elizaKeywordsData;
-            } else {
-                // Fallback to a minimal set if data file is not loaded
-                console.error("Keywords data not found! The chatbot may not work properly.");
-                this.elizaKeywords = [
-                    ["xnone", 0, [
-                        ["*", [
-                            "I'm having trouble loading my memory banks.",
-                            "Please make sure data/eliza-keywords.js is loaded.",
-                            "Sorry, I can't seem to find my response database."
-                        ]]
-                    ]]
-                ];
-            }
+            this.elizaPres = elizaPresData;
+            this.elizaPosts = elizaPostsData;
+            this.elizaSynons = elizaSynonsData;
+            this.elizaKeywords = elizaKeywordsData;
 
             this.elizaPostTransforms = [
                 / old old/g, " old",
