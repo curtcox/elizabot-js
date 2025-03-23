@@ -1,16 +1,7 @@
 // ElizaBot for browser
 // Based on the original elizabot.js but modified for browser use
 
-import elizaInitials from './elizaInitials.js';
-import elizaFinals from './elizaFinals.js';
-import elizaQuits from './elizaQuits.js';
-import elizaPres from './elizaPres.js';
-import elizaPosts from './elizaPosts.js';
-import elizaPostTransforms from './elizaPostTransforms.js';
-import elizaKeywords from './elizaKeywords.js';
-
-// Create and export the elizabot object
-const elizabot = (function() {
+var elizabot = (function() {
     var eliza = {};
 
     eliza.reply = function(r) {
@@ -35,13 +26,77 @@ const elizabot = (function() {
     };
 
     function ElizaBot(noRandomFlag) {
-        this.elizaInitials = elizaInitials;
-        this.elizaFinals = elizaFinals;
-        this.elizaQuits = elizaQuits;
-        this.elizaPres = elizaPres;
-        this.elizaPosts = elizaPosts;
-        this.elizaPostTransforms = elizaPostTransforms;
+        this.elizaInitials = [
+            "How do you do.  Please tell me your problem.",
+            "Please tell me what's been bothering you.",
+            "Is something troubling you ?",
+            "Im here. Talk to me.",
+            "Talk to me",
+            "Top of the morning to you.",
+            "Thanks for waking me up"
+        ];
+
+        this.elizaFinals = [
+            "Goodbye.  It was nice talking to you.",
+            "Goodbye.  This was really a nice talk.",
+            "Goodbye.  I'm looking forward to our next session.",
+            "This was a good session, wasn't it -- but time is over now.   Goodbye.",
+            "Maybe we could discuss this moreover in our next session ?   Goodbye."
+        ];
+
+        this.elizaQuits = [
+            "bye",
+            "goodbye",
+            "done",
+            "exit",
+            "quit"
+        ];
+
+        this.elizaPres = [
+            "dont", "don't",
+            "cant", "can't",
+            "wont", "won't",
+            "recollect", "remember",
+            "recall", "remember",
+            "dreamt", "dreamed",
+            "dreams", "dream",
+            "maybe", "perhaps",
+            "certainly", "yes",
+            "machine", "computer",
+            "machines", "computer",
+            "computers", "computer",
+            "were", "was",
+            "you're", "you are",
+            "i'm", "i am",
+            "same", "alike",
+            "identical", "alike",
+            "equivalent", "alike"
+        ];
+
+        this.elizaPosts = [
+            "am", "are",
+            "your", "my",
+            "me", "you",
+            "myself", "yourself",
+            "yourself", "myself",
+            "i", "you",
+            "you", "I",
+            "my", "your",
+            "i'm", "you are"
+        ];
+
+        // Use the imported elizaKeywords
         this.elizaKeywords = elizaKeywords;
+
+        this.elizaPostTransforms = [
+            / old old/g, " old",
+            /\bthey were( not)? me\b/g, "it was$1 me",
+            /\bthey are( not)? me\b/g, "it is$1 me",
+            /Are they( always)? me\b/, "it is$1 me",
+            /\bthat your( own)? (\w+)( now)? \?/, "that you have your$1 $2 ?",
+            /\bI to have (\w+)/, "I have $1",
+            /Earlier you said your( own)? (\w+)( now)?\./, "Earlier you talked about your $2."
+        ];
 
         this.noRandom = (noRandomFlag) ? true : false;
         this.capitalizeFirstLetter = true;
@@ -245,5 +300,3 @@ const elizabot = (function() {
 
     return eliza;
 })();
-
-export default elizabot;

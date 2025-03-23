@@ -28,3 +28,15 @@ A simple web chat interface is also available:
 3. Press Enter or click "Send" to send your message
 
 The web interface uses `elizabot-browser.js`, which is a browser-compatible version of the original ElizaBot.
+
+## Local Server
+
+A local server has been added to make it easier to run and compare different ElizaBot implementations:
+
+1. Install dependencies: `npm install`
+2. Start the server: `npm start`
+3. Visit `http://localhost:3000` in your browser
+
+### Comparison Page
+
+The server includes a comparison page at `http://localhost:3000/compare` that allows you to test and compare the behavior of different ElizaBot implementations side by side.

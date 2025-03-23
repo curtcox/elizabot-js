@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElizaBot Comparison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .chat-section {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .chat-title {
+            text-align: center;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .chat-container {
+            height: 400px;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #e1f5fe;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+            text-align: right;
+            align-self: flex-end;
+        }
+        .bot-message {
+            background-color: #f0f0f0;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        .input-container {
+            display: flex;
+        }
+        .user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .send-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .send-button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>ElizaBot Implementation Comparison</h1>
+
+    <div class="container">
+        <!-- Original ElizaBot Section -->
+        <div class="chat-section">
+            <h2 class="chat-title">Original ElizaBot (elizabot.js)</h2>
+            <div id="original-chat-container" class="chat-container"></div>
+            <div class="input-container">
+                <input type="text" id="original-user-input" class="user-input" placeholder="Type your message here..." autocomplete="off">
+                <button id="original-send-button" class="send-button">Send</button>
+            </div>
+        </div>
+
+        <!-- Browser ElizaBot Section -->
+        <div class="chat-section">
+            <h2 class="chat-title">Browser ElizaBot (elizabot-browser.js)</h2>
+            <div id="browser-chat-container" class="chat-container"></div>
+            <div class="input-container">
+                <input type="text" id="browser-user-input" class="user-input" placeholder="Type your message here..." autocomplete="off">
+                <button id="browser-send-button" class="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>View the source code on <a href="https://github.com/curtcox/elizabot-js" target="_blank">GitHub</a></p>
+    </footer>
+
+    <!-- Load JS files -->
+    <script src="elizaKeywords.js"></script>
+    <script>
+        // This script loads both Eliza versions and sets up comparison
+
+        // Create a separate scope for each bot to avoid interference
+        const originalElizaScope = {}, browserElizaScope = {};
+
+        // Load original Eliza implementation (Node.js version)
+        (function() {
+            // Temporarily replace the global exports object
+            const originalExports = typeof exports !== 'undefined' ? exports : {};
+
+            // Create a temporary exports object
+            if (typeof exports === 'undefined') {
+                exports = {};
+            }
+
+            // Load the script
+            const originalScript = document.createElement('script');
+            originalScript.src = 'elizabot.js';
+            originalScript.onload = function() {
+                // Save the loaded methods to our scope
+                originalElizaScope.start = exports.start;
+                originalElizaScope.reply = exports.reply;
+                originalElizaScope.bye = exports.bye;
+
+                // Reset the exports object
+                exports = originalExports;
+
+                // Initialize the original bot chat
+                initializeOriginalChat();
+            };
+            document.head.appendChild(originalScript);
+        })();
+
+        // Load browser Eliza implementation
+        (function() {
+            const browserScript = document.createElement('script');
+            browserScript.src = 'elizabot-browser.js';
+            browserScript.onload = function() {
+                // Save to our scope
+                if (typeof elizabot !== 'undefined') {
+                    browserElizaScope.start = elizabot.start;
+                    browserElizaScope.reply = elizabot.reply;
+                    browserElizaScope.bye = elizabot.bye;
+
+                    // Initialize the browser bot chat
+                    initializeBrowserChat();
+                } else {
+                    console.error('Browser elizabot not loaded correctly');
+                }
+            };
+            document.head.appendChild(browserScript);
+        })();
+
+        // Initialize chats when scripts are loaded
+        function initializeOriginalChat() {
+            // Original bot elements
+            const chatContainer = document.getElementById('original-chat-container');
+            const userInput = document.getElementById('original-user-input');
+            const sendButton = document.getElementById('original-send-button');
+
+            // Add initial bot message
+            addBotMessage(chatContainer, originalElizaScope.start());
+
+            // Event listeners
+            sendButton.addEventListener('click', () => sendMessage(
+                userInput,
+                chatContainer,
+                originalElizaScope
+            ));
+
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage(userInput, chatContainer, originalElizaScope);
+                }
+            });
+        }
+
+        function initializeBrowserChat() {
+            // Browser bot elements
+            const chatContainer = document.getElementById('browser-chat-container');
+            const userInput = document.getElementById('browser-user-input');
+            const sendButton = document.getElementById('browser-send-button');
+
+            // Add initial bot message
+            addBotMessage(chatContainer, browserElizaScope.start());
+
+            // Event listeners
+            sendButton.addEventListener('click', () => sendMessage(
+                userInput,
+                chatContainer,
+                browserElizaScope
+            ));
+
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage(userInput, chatContainer, browserElizaScope);
+                }
+            });
+        }
+
+        // Function to send message to a bot
+        function sendMessage(inputElement, chatContainer, botScope) {
+            const message = inputElement.value.trim();
+            if (message === '') return;
+
+            // Add user message to chat
+            addUserMessage(chatContainer, message);
+
+            // Get bot response with a short delay
+            setTimeout(() => {
+                const botResponse = botScope.reply(message);
+                addBotMessage(chatContainer, botResponse);
+            }, 300);
+
+            // Clear input
+            inputElement.value = '';
+        }
+
+        // Function to add user message to chat
+        function addUserMessage(chatContainer, message) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container';
+
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message user-message';
+            messageElement.textContent = message;
+
+            messageContainer.appendChild(messageElement);
+            chatContainer.appendChild(messageContainer);
+            scrollToBottom(chatContainer);
+        }
+
+        // Function to add bot message to chat
+        function addBotMessage(chatContainer, message) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container';
+
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message bot-message';
+            messageElement.textContent = message;
+
+            messageContainer.appendChild(messageElement);
+            chatContainer.appendChild(messageContainer);
+            scrollToBottom(chatContainer);
+        }
+
+        // Function to scroll to bottom of chat
+        function scrollToBottom(chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

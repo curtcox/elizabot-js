@@ -170,5 +170,3 @@ const elizaKeywords = [
         ]]
     ]]
 ];
-
-export default elizaKeywords;
