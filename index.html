@@ -75,9 +75,9 @@
         <button id="send-button">Send</button>
     </div>
 
-    <script src="elizaKeywords.js"></script>
-    <script src="elizabot-browser.js"></script>
-    <script>
+    <script type="module">
+        import elizabot from './elizabot-browser.js';
+
         // Initialize variables
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
