@@ -72,26 +72,20 @@ const elizabot = (() => {
                 "quit"
             ];
 
-            this.elizaPres = [
-                "dont", "don't",
-                "cant", "can't",
-                "wont", "won't",
-                "recollect", "remember",
-                "recall", "remember",
-                "dreamt", "dreamed",
-                "dreams", "dream",
-                "maybe", "perhaps",
-                "certainly", "yes",
-                "machine", "computer",
-                "machines", "computer",
-                "computers", "computer",
-                "were", "was",
-                "you're", "you are",
-                "i'm", "i am",
-                "same", "alike",
-                "identical", "alike",
-                "equivalent", "alike"
-            ];
+            // Use the external data for pre-substitutions if available
+            if (typeof window !== 'undefined' && window.elizaPresData) {
+                this.elizaPres = window.elizaPresData;
+            } else if (typeof elizaPresData !== 'undefined') {
+                this.elizaPres = elizaPresData;
+            } else {
+                // Fallback to a minimal set if data file is not loaded
+                console.error("Pre-substitution data not found! The chatbot may not work properly.");
+                this.elizaPres = [
+                    "dont", "don't",
+                    "cant", "can't",
+                    "wont", "won't"
+                ];
+            }
 
             this.elizaPosts = [
                 "am", "are",
