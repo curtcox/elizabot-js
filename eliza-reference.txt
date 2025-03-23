@@ -1,0 +1,342 @@
+=== Conversations with seed 42 ===
+
+--- eliza-inputs ---
+
+ELIZA: Thanks for waking me up
+USER: hello
+ELIZA: Hi. What seems to be your problem ?
+USER: I am feeling sad
+ELIZA: Can you explain what made you sad ?
+USER: My mother doesn't understand me
+ELIZA: Your mother ?
+USER: I have problems with my boss
+ELIZA: Your boss ?
+USER: Everyone hates me
+ELIZA: Someone special perhaps ?
+USER: I need help
+ELIZA: What would getting help mean to you ?
+USER: I am worried about the future
+ELIZA: Do you believe it is normal to be worried about the future ?
+USER: I can't sleep at night
+ELIZA: Do you really want to be able to sleep at night ?
+USER: I want to be happy
+ELIZA: What does wanting to be happy have to do with this discussion ?
+USER: My life is a mess
+ELIZA: Is it important to you that you have your life is a mess ?
+USER: goodbye
+ELIZA: Goodbye.  It was nice talking to you.
+
+
+--- eliza-inputs-short ---
+
+ELIZA: Thanks for waking me up
+USER: hello
+ELIZA: Hi. What seems to be your problem ?
+USER: I need help
+ELIZA: What does wanting help have to do with this discussion ?
+USER: goodbye
+ELIZA: This was a good session, wasn't it -- but time is over now.   Goodbye.
+
+
+--- eliza-inputs-family ---
+
+ELIZA: Thanks for waking me up
+USER: hello
+ELIZA: Hi. What seems to be your problem ?
+USER: Dad
+ELIZA: I see. How does that make you feel ?
+USER: Are you my father?
+ELIZA: Your father ?
+USER: My mother doesn't understand me
+ELIZA: What else comes to your mind when you think of your mother ?
+USER: I miss my family
+ELIZA: Your family ?
+USER: goodbye
+ELIZA: This was a good session, wasn't it -- but time is over now.   Goodbye.
+
+
+--- eliza-inputs-long ---
+
+ELIZA: Thanks for waking me up
+USER: hello
+ELIZA: Hi. What seems to be your problem ?
+USER: I am feeling sad
+ELIZA: Can you explain what made you sad ?
+USER: My mother doesn't understand me
+ELIZA: Your mother ?
+USER: I have problems with my boss
+ELIZA: Your boss ?
+USER: Everyone hates me
+ELIZA: Someone special perhaps ?
+USER: I need help
+ELIZA: What would getting help mean to you ?
+USER: I am worried about the future
+ELIZA: Do you believe it is normal to be worried about the future ?
+USER: I can't sleep at night
+ELIZA: Do you really want to be able to sleep at night ?
+USER: I want to be happy
+ELIZA: What does wanting to be happy have to do with this discussion ?
+USER: My life is a mess
+ELIZA: Is it important to you that you have your life is a mess ?
+USER: I remember my childhood
+ELIZA: Does thinking of your childhood bring anything else to mind ?
+USER: I had a dream last night
+ELIZA: What does that dream suggest to you ?
+USER: I dreamed I was flying
+ELIZA: Have you ever dreamed you was flying before ?
+USER: I forget things easily
+ELIZA: Are you generally forgetful ?
+USER: Perhaps I should see a doctor
+ELIZA: You don't seem quite certain.
+USER: I believe I am sick
+ELIZA: Do you think coming here will help you not to be sick ?
+USER: Why can't I be normal?
+ELIZA: Do you say why can't you be normal for some special reason ?
+USER: I don't like myself
+ELIZA: Do you wish to be able to like yourself ?
+USER: I feel anxious all the time
+ELIZA: Tell me more about such feelings.
+USER: My friends think I'm strange
+ELIZA: Does that suggest anything else which belongs to you ?
+USER: I want to change my life
+ELIZA: Is it important to you that you have your life ?
+USER: If I could start over
+ELIZA: Do you think it's likely that you could start over ?
+USER: I was different when I was younger
+ELIZA: Perhaps I already know you were younger.
+USER: Always feeling alone
+ELIZA: When ?
+USER: I am sorry for complaining
+ELIZA: Apologies are not necessary.
+USER: goodbye
+ELIZA: Maybe we could discuss this moreover in our next session ?   Goodbye.
+
+
+=== Conversations with seed 100 ===
+
+--- eliza-inputs ---
+
+ELIZA: Please tell me what's been bothering you.
+USER: hello
+ELIZA: How do you do. Please state your problem.
+USER: I am feeling sad
+ELIZA: I am sorry to hear that you are sad.
+USER: My mother doesn't understand me
+ELIZA: Who else in your family doesn't understand you ?
+USER: I have problems with my boss
+ELIZA: Your boss ?
+USER: Everyone hates me
+ELIZA: Can you think of anyone in particular ?
+USER: I need help
+ELIZA: What would getting help mean to you ?
+USER: I am worried about the future
+ELIZA: How long have you been worried about the future ?
+USER: I can't sleep at night
+ELIZA: How do you know that you can't sleep at night ?
+USER: I want to be happy
+ELIZA: Suppose you got to be happy soon.
+USER: My life is a mess
+ELIZA: Do you have more than 1 life is a mess ?
+USER: goodbye
+ELIZA: Maybe we could discuss this moreover in our next session ?   Goodbye.
+
+
+--- eliza-inputs-short ---
+
+ELIZA: Please tell me what's been bothering you.
+USER: hello
+ELIZA: How do you do. Please state your problem.
+USER: I need help
+ELIZA: What would it mean to you if you got help ?
+USER: goodbye
+ELIZA: Goodbye.  This was really a nice talk.
+
+
+--- eliza-inputs-family ---
+
+ELIZA: Please tell me what's been bothering you.
+USER: hello
+ELIZA: How do you do. Please state your problem.
+USER: Dad
+ELIZA: Please go on.
+USER: Are you my father?
+ELIZA: Who else in your family ?
+USER: My mother doesn't understand me
+ELIZA: Your mother ?
+USER: I miss my family
+ELIZA: Who else in your family ?
+USER: goodbye
+ELIZA: This was a good session, wasn't it -- but time is over now.   Goodbye.
+
+
+--- eliza-inputs-long ---
+
+ELIZA: Please tell me what's been bothering you.
+USER: hello
+ELIZA: How do you do. Please state your problem.
+USER: I am feeling sad
+ELIZA: I am sorry to hear that you are sad.
+USER: My mother doesn't understand me
+ELIZA: Who else in your family doesn't understand you ?
+USER: I have problems with my boss
+ELIZA: Your boss ?
+USER: Everyone hates me
+ELIZA: Can you think of anyone in particular ?
+USER: I need help
+ELIZA: What would getting help mean to you ?
+USER: I am worried about the future
+ELIZA: How long have you been worried about the future ?
+USER: I can't sleep at night
+ELIZA: How do you know that you can't sleep at night ?
+USER: I want to be happy
+ELIZA: Suppose you got to be happy soon.
+USER: My life is a mess
+ELIZA: Do you have more than 1 life is a mess ?
+USER: I remember my childhood
+ELIZA: What else does your childhood remind you of ?
+USER: I had a dream last night
+ELIZA: Do you believe that dreams have something to do with your problem ?
+USER: I dreamed I was flying
+ELIZA: What persons appear in your dreams ?
+USER: I forget things easily
+ELIZA: How often do you think of things easily ?
+USER: Perhaps I should see a doctor
+ELIZA: You don't seem quite certain.
+USER: I believe I am sick
+ELIZA: I'm sure it's not pleasant to be sick.
+USER: Why can't I be normal?
+ELIZA: When did you first think about why can't you be normal
+USER: I don't like myself
+ELIZA: Does that trouble you ?
+USER: I feel anxious all the time
+ELIZA: Of what does feeling anxious all the time remind you ?
+USER: My friends think I'm strange
+ELIZA: Does that suggest anything else which belongs to you ?
+USER: I want to change my life
+ELIZA: Do you have more than 1 life ?
+USER: If I could start over
+ELIZA: What does this speculation lead to ?
+USER: I was different when I was younger
+ELIZA: Why do you tell me you were younger now ?
+USER: Always feeling alone
+ELIZA: When ?
+USER: I am sorry for complaining
+ELIZA: I've told you that apologies are not required.
+USER: goodbye
+ELIZA: Goodbye.  I'm looking forward to our next session.
+
+
+=== Conversations with seed 123 ===
+
+--- eliza-inputs ---
+
+ELIZA: How do you do.  Please tell me your problem.
+USER: hello
+ELIZA: Hi. What seems to be your problem ?
+USER: I am feeling sad
+ELIZA: I am sorry to hear that you are sad.
+USER: My mother doesn't understand me
+ELIZA: What else comes to your mind when you think of your mother ?
+USER: I have problems with my boss
+ELIZA: Is it important to you that you have your boss ?
+USER: Everyone hates me
+ELIZA: Someone special perhaps ?
+USER: I need help
+ELIZA: Why do you want help ?
+USER: I am worried about the future
+ELIZA: Do you know anyone else who is worried about the future ?
+USER: I can't sleep at night
+ELIZA: Have you tried ?
+USER: I want to be happy
+ELIZA: What does wanting to be happy have to do with this discussion ?
+USER: My life is a mess
+ELIZA: Do you have more than 1 life is a mess ?
+USER: goodbye
+ELIZA: Goodbye.  It was nice talking to you.
+
+
+--- eliza-inputs-short ---
+
+ELIZA: How do you do.  Please tell me your problem.
+USER: hello
+ELIZA: Hi. What seems to be your problem ?
+USER: I need help
+ELIZA: Suppose you got help soon.
+USER: goodbye
+ELIZA: Goodbye.  It was nice talking to you.
+
+
+--- eliza-inputs-family ---
+
+ELIZA: How do you do.  Please tell me your problem.
+USER: hello
+ELIZA: Hi. What seems to be your problem ?
+USER: Dad
+ELIZA: Tell me more about that.
+USER: Are you my father?
+ELIZA: Tell me more about your family.
+USER: My mother doesn't understand me
+ELIZA: Who else in your family doesn't understand you ?
+USER: I miss my family
+ELIZA: What else comes to your mind when you think of your family ?
+USER: goodbye
+ELIZA: Goodbye.  This was really a nice talk.
+
+
+--- eliza-inputs-long ---
+
+ELIZA: How do you do.  Please tell me your problem.
+USER: hello
+ELIZA: Hi. What seems to be your problem ?
+USER: I am feeling sad
+ELIZA: I am sorry to hear that you are sad.
+USER: My mother doesn't understand me
+ELIZA: What else comes to your mind when you think of your mother ?
+USER: I have problems with my boss
+ELIZA: Is it important to you that you have your boss ?
+USER: Everyone hates me
+ELIZA: Someone special perhaps ?
+USER: I need help
+ELIZA: Why do you want help ?
+USER: I am worried about the future
+ELIZA: Do you know anyone else who is worried about the future ?
+USER: I can't sleep at night
+ELIZA: Have you tried ?
+USER: I want to be happy
+ELIZA: What does wanting to be happy have to do with this discussion ?
+USER: My life is a mess
+ELIZA: Do you have more than 1 life is a mess ?
+USER: I remember my childhood
+ELIZA: Do you often think of your childhood ?
+USER: I had a dream last night
+ELIZA: What persons appear in your dreams ?
+USER: I dreamed I was flying
+ELIZA: Do you believe that dreams have something to do with your problem ?
+USER: I forget things easily
+ELIZA: Does it bother you to forget that ?
+USER: Perhaps I should see a doctor
+ELIZA: Why the uncertain tone ?
+USER: I believe I am sick
+ELIZA: Can you explain what made you sick ?
+USER: Why can't I be normal?
+ELIZA: Do you say why can't you be normal for some special reason ?
+USER: I don't like myself
+ELIZA: Don't you really like yourself ?
+USER: I feel anxious all the time
+ELIZA: Do you often feel anxious all the time ?
+USER: My friends think I'm strange
+ELIZA: Does that suggest anything else which belongs to you ?
+USER: I want to change my life
+ELIZA: Do you like your life 
+USER: If I could start over
+ELIZA: Do you wish that you could start over ?
+USER: I was different when I was younger
+ELIZA: Were you really ?
+USER: Always feeling alone
+ELIZA: Can you think of a specific example ?
+USER: I am sorry for complaining
+ELIZA: It did not bother me. Please continue.
+USER: goodbye
+ELIZA: Maybe we could discuss this moreover in our next session ?   Goodbye.
+
+

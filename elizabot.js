@@ -1,40 +1,31 @@
-// Simple seeded random number generator
-var seed = 1234; // Fixed seed for reproducible results
-function seededRandom() {
-	seed = (seed * 9301 + 49297) % 233280;
-	return seed / 233280;
-}
-
 exports.reply = function (r) {
 	if (this.bot == null) {
-		this.bot = new ElizaBot(false);
+		this.bot = new ElizaBot(Math.random);
 	}
 	return this.bot.transform(r);
 }
 
 exports.start = function () {
 	if (this.bot == null) {
-		this.bot = new ElizaBot(false);
+		this.bot = new ElizaBot(Math.random);
 	}
 	return this.bot.getInitial();
 }
 
 exports.bye = function () {
 	if (this.bot == null) {
-		this.bot = new ElizaBot(false);
+		this.bot = new ElizaBot(Math.random);
 	}
 	return this.bot.getFinal();
 }
 
-// Set or reset the random seed
-exports.setSeed = function(newSeed) {
-	seed = newSeed || 1234;
-	if (this.bot) {
-		this.bot.reset();
-	}
-};
+// Export the ElizaBot constructor
+exports.ElizaBot = ElizaBot;
 
-function ElizaBot(noRandomFlag) {
+function ElizaBot(randomFunc) {
+	if (!randomFunc || typeof randomFunc !== 'function') {
+		throw new Error("Random function is required");
+	}
 
 	this.elizaInitials = [
 		"How do you do.  Please tell me your problem.",
@@ -665,11 +656,11 @@ function ElizaBot(noRandomFlag) {
 		"sad": ["unhappy", "depressed", "sick"]
 	};
 
-	this.noRandom= (noRandomFlag)? true:false;
-	this.capitalizeFirstLetter=true;
-	this.debug=false;
-	this.memSize=20;
-	this.version="1.1 (original)";
+	this.randomFunc = randomFunc;
+	this.capitalizeFirstLetter = true;
+	this.debug = false;
+	this.memSize = 20;
+	this.version = "1.1 (original)";
 
 	this._dataParsed = false;
 	if (!this._dataParsed) {
@@ -889,16 +880,16 @@ ElizaBot.prototype._execRule = function(k) {
 		if (m!=null) {
 			var reasmbs=decomps[i][1];
 			var memflag=decomps[i][2];
-			var ri= (this.noRandom)? 0 : Math.floor(seededRandom()*reasmbs.length);
-			if (((this.noRandom) && (this.lastchoice[k][i]>ri)) || (this.lastchoice[k][i]==ri)) {
-				ri= ++this.lastchoice[k][i];
-				if (ri>=reasmbs.length) {
-					ri=0;
-					this.lastchoice[k][i]=-1;
+			var ri = Math.floor(this.randomFunc() * reasmbs.length);
+			if (this.lastchoice[k][i] == ri) {
+				ri = ++this.lastchoice[k][i];
+				if (ri >= reasmbs.length) {
+					ri = 0;
+					this.lastchoice[k][i] = -1;
 				}
 			}
 			else {
-				this.lastchoice[k][i]=ri;
+				this.lastchoice[k][i] = ri;
 			}
 			var rpl=reasmbs[ri];
 			if (this.debug) alert('match:\nkey: '+this.elizaKeywords[k][0]+
@@ -976,26 +967,23 @@ ElizaBot.prototype._memSave = function(t) {
 
 ElizaBot.prototype._memGet = function() {
 	if (this.mem.length) {
-		if (this.noRandom) return this.mem.shift();
-		else {
-			var n=Math.floor(seededRandom()*this.mem.length);
-			var rpl=this.mem[n];
-			for (var i=n+1; i<this.mem.length; i++) this.mem[i-1]=this.mem[i];
-			this.mem.length--;
-			return rpl;
-		}
+		var n = Math.floor(this.randomFunc() * this.mem.length);
+		var rpl = this.mem[n];
+		for (var i=n+1; i<this.mem.length; i++) this.mem[i-1] = this.mem[i];
+		this.mem.length--;
+		return rpl;
 	}
 	else return '';
 }
 
 ElizaBot.prototype.getFinal = function() {
 	if (!this.elizaFinals) return '';
-	return this.elizaFinals[Math.floor(seededRandom()*this.elizaFinals.length)];
+	return this.elizaFinals[Math.floor(this.randomFunc()*this.elizaFinals.length)];
 }
 
 ElizaBot.prototype.getInitial = function() {
 	if (!this.elizaInitials) return '';
-	return this.elizaInitials[Math.floor(seededRandom()*this.elizaInitials.length)];
+	return this.elizaInitials[Math.floor(this.randomFunc()*this.elizaInitials.length)];
 }
 
 var elizaFinals = [

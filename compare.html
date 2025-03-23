@@ -124,12 +124,24 @@
     </footer>
 
     <!-- Load JS files -->
-    <script src="elizaKeywords.js"></script>
     <script>
         // This script loads both Eliza versions and sets up comparison
 
         // Create a separate scope for each bot to avoid interference
         const originalElizaScope = {}, browserElizaScope = {};
+
+        // Create random functions for each bot
+        function createRandomFunction() {
+            return Math.random;
+        }
+
+        function createSeededRandomFunction() {
+            let seed = 1234;
+            return function() {
+                seed = (seed * 9301 + 49297) % 233280;
+                return seed / 233280;
+            };
+        }
 
         // Load original Eliza implementation (Node.js version)
         (function() {
@@ -146,9 +158,26 @@
             originalScript.src = 'elizabot.js';
             originalScript.onload = function() {
                 // Save the loaded methods to our scope
-                originalElizaScope.start = exports.start;
-                originalElizaScope.reply = exports.reply;
-                originalElizaScope.bye = exports.bye;
+                originalElizaScope.start = function() {
+                    if (!originalElizaScope.bot) {
+                        originalElizaScope.bot = new exports.ElizaBot(createRandomFunction());
+                    }
+                    return originalElizaScope.bot.getInitial();
+                };
+
+                originalElizaScope.reply = function(r) {
+                    if (!originalElizaScope.bot) {
+                        originalElizaScope.bot = new exports.ElizaBot(createRandomFunction());
+                    }
+                    return originalElizaScope.bot.transform(r);
+                };
+
+                originalElizaScope.bye = function() {
+                    if (!originalElizaScope.bot) {
+                        originalElizaScope.bot = new exports.ElizaBot(createRandomFunction());
+                    }
+                    return originalElizaScope.bot.getFinal();
+                };
 
                 // Reset the exports object
                 exports = originalExports;

@@ -115,3 +115,53 @@ console.log(eliza.bye());
 ## License
 
 This implementation is provided for educational purposes.
+
+# ElizaBot.js Determinism Test
+
+This project tests whether elizabot.js produces deterministic outputs given the same inputs and random seed.
+
+## Files
+
+- `elizabot.js` - The original ElizaBot implementation
+- `eliza-inputs.txt` - Original set of inputs
+- `eliza-inputs-short.txt` - A shorter conversation
+- `eliza-inputs-family.txt` - Family-related conversation including "Dad" and "Are you my father?"
+- `eliza-inputs-long.txt` - An extended, longer conversation
+- `generate-reference.js` - Script to generate reference conversations
+- `eliza-reference.json` - JSON file with reference conversations
+- `eliza-reference.txt` - Human-readable reference conversations
+- `test-determinism.js` - Script to test the determinism of ElizaBot
+
+## How It Works
+
+1. **Multiple Conversation Types**: We test conversations of various lengths and topics
+2. **Fixed Inputs**: Each conversation uses a consistent set of inputs
+3. **Seeded Randomization**: We replace JavaScript's `Math.random()` with our own deterministic random function
+4. **Reference Generation**: We create reference outputs with known seeds
+5. **Determinism Testing**: We verify that given the same inputs and seeds, the outputs are always the same
+
+## Running the Tests
+
+1. First, generate the reference conversations:
+
+```bash
+node generate-reference.js
+```
+
+2. Then run the determinism tests:
+
+```bash
+node test-determinism.js
+```
+
+If all tests pass, it confirms that elizabot.js is deterministic when given a consistent random seed.
+
+## Understanding the Results
+
+The test generates conversations with different seeds to demonstrate that:
+
+1. With the same seed, elizabot.js will always produce the same responses
+2. With different seeds, the responses may vary
+3. The variation is solely due to the random seed, not any non-deterministic behavior
+
+This shows that elizabot.js is completely deterministic when controlling for randomness.

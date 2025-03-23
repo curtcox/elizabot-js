@@ -1,0 +1,1220 @@
+{
+  "42": {
+    "eliza-inputs": {
+      "name": "eliza-inputs",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "Thanks for waking me up"
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Hi. What seems to be your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am feeling sad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Can you explain what made you sad ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your mother ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I have problems with my boss"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your boss ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Everyone hates me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Someone special perhaps ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What would getting help mean to you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am worried about the future"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you believe it is normal to be worried about the future ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I can't sleep at night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you really want to be able to sleep at night ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to be happy"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What does wanting to be happy have to do with this discussion ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My life is a mess"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Is it important to you that you have your life is a mess ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Goodbye.  It was nice talking to you."
+        }
+      ]
+    },
+    "eliza-inputs-short": {
+      "name": "eliza-inputs-short",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "Thanks for waking me up"
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Hi. What seems to be your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What does wanting help have to do with this discussion ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "This was a good session, wasn't it -- but time is over now.   Goodbye."
+        }
+      ]
+    },
+    "eliza-inputs-family": {
+      "name": "eliza-inputs-family",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "Thanks for waking me up"
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Hi. What seems to be your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Dad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "I see. How does that make you feel ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Are you my father?"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your father ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What else comes to your mind when you think of your mother ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I miss my family"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your family ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "This was a good session, wasn't it -- but time is over now.   Goodbye."
+        }
+      ]
+    },
+    "eliza-inputs-long": {
+      "name": "eliza-inputs-long",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "Thanks for waking me up"
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Hi. What seems to be your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am feeling sad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Can you explain what made you sad ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your mother ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I have problems with my boss"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your boss ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Everyone hates me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Someone special perhaps ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What would getting help mean to you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am worried about the future"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you believe it is normal to be worried about the future ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I can't sleep at night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you really want to be able to sleep at night ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to be happy"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What does wanting to be happy have to do with this discussion ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My life is a mess"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Is it important to you that you have your life is a mess ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I remember my childhood"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Does thinking of your childhood bring anything else to mind ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I had a dream last night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What does that dream suggest to you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I dreamed I was flying"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Have you ever dreamed you was flying before ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I forget things easily"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Are you generally forgetful ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Perhaps I should see a doctor"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "You don't seem quite certain."
+        },
+        {
+          "speaker": "USER",
+          "message": "I believe I am sick"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you think coming here will help you not to be sick ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Why can't I be normal?"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you say why can't you be normal for some special reason ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I don't like myself"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you wish to be able to like yourself ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I feel anxious all the time"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Tell me more about such feelings."
+        },
+        {
+          "speaker": "USER",
+          "message": "My friends think I'm strange"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Does that suggest anything else which belongs to you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to change my life"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Is it important to you that you have your life ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "If I could start over"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you think it's likely that you could start over ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I was different when I was younger"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Perhaps I already know you were younger."
+        },
+        {
+          "speaker": "USER",
+          "message": "Always feeling alone"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "When ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am sorry for complaining"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Apologies are not necessary."
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Maybe we could discuss this moreover in our next session ?   Goodbye."
+        }
+      ]
+    }
+  },
+  "100": {
+    "eliza-inputs": {
+      "name": "eliza-inputs",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "Please tell me what's been bothering you."
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How do you do. Please state your problem."
+        },
+        {
+          "speaker": "USER",
+          "message": "I am feeling sad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "I am sorry to hear that you are sad."
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Who else in your family doesn't understand you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I have problems with my boss"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your boss ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Everyone hates me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Can you think of anyone in particular ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What would getting help mean to you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am worried about the future"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How long have you been worried about the future ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I can't sleep at night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How do you know that you can't sleep at night ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to be happy"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Suppose you got to be happy soon."
+        },
+        {
+          "speaker": "USER",
+          "message": "My life is a mess"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you have more than 1 life is a mess ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Maybe we could discuss this moreover in our next session ?   Goodbye."
+        }
+      ]
+    },
+    "eliza-inputs-short": {
+      "name": "eliza-inputs-short",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "Please tell me what's been bothering you."
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How do you do. Please state your problem."
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What would it mean to you if you got help ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Goodbye.  This was really a nice talk."
+        }
+      ]
+    },
+    "eliza-inputs-family": {
+      "name": "eliza-inputs-family",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "Please tell me what's been bothering you."
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How do you do. Please state your problem."
+        },
+        {
+          "speaker": "USER",
+          "message": "Dad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Please go on."
+        },
+        {
+          "speaker": "USER",
+          "message": "Are you my father?"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Who else in your family ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your mother ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I miss my family"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Who else in your family ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "This was a good session, wasn't it -- but time is over now.   Goodbye."
+        }
+      ]
+    },
+    "eliza-inputs-long": {
+      "name": "eliza-inputs-long",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "Please tell me what's been bothering you."
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How do you do. Please state your problem."
+        },
+        {
+          "speaker": "USER",
+          "message": "I am feeling sad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "I am sorry to hear that you are sad."
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Who else in your family doesn't understand you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I have problems with my boss"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Your boss ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Everyone hates me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Can you think of anyone in particular ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What would getting help mean to you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am worried about the future"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How long have you been worried about the future ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I can't sleep at night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How do you know that you can't sleep at night ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to be happy"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Suppose you got to be happy soon."
+        },
+        {
+          "speaker": "USER",
+          "message": "My life is a mess"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you have more than 1 life is a mess ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I remember my childhood"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What else does your childhood remind you of ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I had a dream last night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you believe that dreams have something to do with your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I dreamed I was flying"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What persons appear in your dreams ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I forget things easily"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "How often do you think of things easily ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Perhaps I should see a doctor"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "You don't seem quite certain."
+        },
+        {
+          "speaker": "USER",
+          "message": "I believe I am sick"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "I'm sure it's not pleasant to be sick."
+        },
+        {
+          "speaker": "USER",
+          "message": "Why can't I be normal?"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "When did you first think about why can't you be normal"
+        },
+        {
+          "speaker": "USER",
+          "message": "I don't like myself"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Does that trouble you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I feel anxious all the time"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Of what does feeling anxious all the time remind you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My friends think I'm strange"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Does that suggest anything else which belongs to you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to change my life"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you have more than 1 life ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "If I could start over"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What does this speculation lead to ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I was different when I was younger"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Why do you tell me you were younger now ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Always feeling alone"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "When ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am sorry for complaining"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "I've told you that apologies are not required."
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Goodbye.  I'm looking forward to our next session."
+        }
+      ]
+    }
+  },
+  "123": {
+    "eliza-inputs": {
+      "name": "eliza-inputs",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "How do you do.  Please tell me your problem."
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Hi. What seems to be your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am feeling sad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "I am sorry to hear that you are sad."
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What else comes to your mind when you think of your mother ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I have problems with my boss"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Is it important to you that you have your boss ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Everyone hates me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Someone special perhaps ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Why do you want help ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am worried about the future"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you know anyone else who is worried about the future ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I can't sleep at night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Have you tried ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to be happy"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What does wanting to be happy have to do with this discussion ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My life is a mess"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you have more than 1 life is a mess ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Goodbye.  It was nice talking to you."
+        }
+      ]
+    },
+    "eliza-inputs-short": {
+      "name": "eliza-inputs-short",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "How do you do.  Please tell me your problem."
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Hi. What seems to be your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Suppose you got help soon."
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Goodbye.  It was nice talking to you."
+        }
+      ]
+    },
+    "eliza-inputs-family": {
+      "name": "eliza-inputs-family",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "How do you do.  Please tell me your problem."
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Hi. What seems to be your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Dad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Tell me more about that."
+        },
+        {
+          "speaker": "USER",
+          "message": "Are you my father?"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Tell me more about your family."
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Who else in your family doesn't understand you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I miss my family"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What else comes to your mind when you think of your family ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Goodbye.  This was really a nice talk."
+        }
+      ]
+    },
+    "eliza-inputs-long": {
+      "name": "eliza-inputs-long",
+      "messages": [
+        {
+          "speaker": "ELIZA",
+          "message": "How do you do.  Please tell me your problem."
+        },
+        {
+          "speaker": "USER",
+          "message": "hello"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Hi. What seems to be your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am feeling sad"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "I am sorry to hear that you are sad."
+        },
+        {
+          "speaker": "USER",
+          "message": "My mother doesn't understand me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What else comes to your mind when you think of your mother ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I have problems with my boss"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Is it important to you that you have your boss ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Everyone hates me"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Someone special perhaps ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I need help"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Why do you want help ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am worried about the future"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you know anyone else who is worried about the future ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I can't sleep at night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Have you tried ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to be happy"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What does wanting to be happy have to do with this discussion ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My life is a mess"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you have more than 1 life is a mess ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I remember my childhood"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you often think of your childhood ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I had a dream last night"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "What persons appear in your dreams ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I dreamed I was flying"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you believe that dreams have something to do with your problem ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I forget things easily"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Does it bother you to forget that ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Perhaps I should see a doctor"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Why the uncertain tone ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I believe I am sick"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Can you explain what made you sick ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Why can't I be normal?"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you say why can't you be normal for some special reason ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I don't like myself"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Don't you really like yourself ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I feel anxious all the time"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you often feel anxious all the time ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "My friends think I'm strange"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Does that suggest anything else which belongs to you ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I want to change my life"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you like your life "
+        },
+        {
+          "speaker": "USER",
+          "message": "If I could start over"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Do you wish that you could start over ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I was different when I was younger"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Were you really ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "Always feeling alone"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Can you think of a specific example ?"
+        },
+        {
+          "speaker": "USER",
+          "message": "I am sorry for complaining"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "It did not bother me. Please continue."
+        },
+        {
+          "speaker": "USER",
+          "message": "goodbye"
+        },
+        {
+          "speaker": "ELIZA",
+          "message": "Maybe we could discuss this moreover in our next session ?   Goodbye."
+        }
+      ]
+    }
+  }
+}
